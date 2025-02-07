@@ -3,14 +3,6 @@
   "WorkspaceRootPath": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\threadtools\\threadresourcemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\threadtools\\threadresourcemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\utilitytools\\threading\\lockableproperty.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\utilitytools\\threading\\lockableproperty.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\collectiontools\\signalingcollections\\signalingqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\collectiontools\\signalingcollections\\signalingqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -31,12 +23,20 @@
       "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\mikoutools.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\stringtools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\stringtools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\collectiontools\\threadsafecollections\\threadsafelist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\collectiontools\\threadsafecollections\\threadsafelist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\threadtools\\threadresourcemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\threadtools\\threadresourcemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\utilitytools\\threading\\lockableproperty.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\utilitytools\\threading\\lockableproperty.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\stringtools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\stringtools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\threadtools\\threadmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -65,21 +65,20 @@
           "SelectedChildIndex": 7,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "StringTools.cs",
-              "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\StringTools.cs",
-              "RelativeDocumentMoniker": "MikouTools\\StringTools.cs",
-              "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\StringTools.cs",
-              "RelativeToolTip": "MikouTools\\StringTools.cs",
-              "ViewState": "AgIAAAEAAAAAAAAAAAAmwA4AAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-04T06:25:46.919Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "MikouTools.csproj",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\MikouTools.csproj",
               "RelativeDocumentMoniker": "MikouTools\\MikouTools.csproj",
@@ -92,20 +91,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "SyncDictionary.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\SyncCollections\\SyncDictionary.cs",
               "RelativeDocumentMoniker": "MikouTools\\CollectionTools\\SyncCollections\\SyncDictionary.cs",
               "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\SyncCollections\\SyncDictionary.cs",
               "RelativeToolTip": "MikouTools\\CollectionTools\\SyncCollections\\SyncDictionary.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-03T23:54:49.065Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "CustomManualResetEvent.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\ThreadTools\\CustomManualResetEvent.cs",
               "RelativeDocumentMoniker": "MikouTools\\ThreadTools\\CustomManualResetEvent.cs",
@@ -118,33 +117,46 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "CustomQueue.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\CustomCollections\\CustomQueue.cs",
               "RelativeDocumentMoniker": "MikouTools\\CollectionTools\\CustomCollections\\CustomQueue.cs",
               "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\CustomCollections\\CustomQueue.cs",
               "RelativeToolTip": "MikouTools\\CollectionTools\\CustomCollections\\CustomQueue.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABYAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-19T02:38:04.672Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "SignalingQueue.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\SignalingCollections\\SignalingQueue.cs",
               "RelativeDocumentMoniker": "MikouTools\\CollectionTools\\SignalingCollections\\SignalingQueue.cs",
               "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\SignalingCollections\\SignalingQueue.cs",
               "RelativeToolTip": "MikouTools\\CollectionTools\\SignalingCollections\\SignalingQueue.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFEAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-19T02:37:39.268Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 8,
+              "Title": "StringTools.cs",
+              "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\StringTools.cs",
+              "RelativeDocumentMoniker": "MikouTools\\StringTools.cs",
+              "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\StringTools.cs",
+              "RelativeToolTip": "MikouTools\\StringTools.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAmwA4AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-04T06:25:46.919Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "LockableProperty.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\UtilityTools\\Threading\\LockableProperty.cs",
               "RelativeDocumentMoniker": "MikouTools\\UtilityTools\\Threading\\LockableProperty.cs",
@@ -157,7 +169,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 6,
               "Title": "ThreadResourceManager.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\ThreadTools\\ThreadResourceManager.cs",
               "RelativeDocumentMoniker": "MikouTools\\ThreadTools\\ThreadResourceManager.cs",
@@ -170,15 +182,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 5,
               "Title": "ThreadSafeList.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\ThreadSafeCollections\\ThreadSafeList.cs",
               "RelativeDocumentMoniker": "MikouTools\\CollectionTools\\ThreadSafeCollections\\ThreadSafeList.cs",
               "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\ThreadSafeCollections\\ThreadSafeList.cs",
               "RelativeToolTip": "MikouTools\\CollectionTools\\ThreadSafeCollections\\ThreadSafeList.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAAAD8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-16T07:52:34.227Z"
+              "WhenOpened": "2025-01-16T07:52:34.227Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
