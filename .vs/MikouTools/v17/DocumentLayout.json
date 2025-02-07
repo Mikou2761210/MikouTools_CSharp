@@ -7,28 +7,40 @@
       "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\threadtools\\threadresourcemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\threadtools\\threadmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\threadtools\\threadmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\collectiontools\\customcollections\\customqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\collectiontools\\customcollections\\customqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\utilitytools\\threading\\lockableproperty.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\utilitytools\\threading\\lockableproperty.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\collectiontools\\signalingcollections\\signalingqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\collectiontools\\signalingcollections\\signalingqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\utilitytools\\threading\\lockableproperty.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\utilitytools\\threading\\lockableproperty.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\collectiontools\\customcollections\\customqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\collectiontools\\customcollections\\customqueue.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\threadtools\\custommanualresetevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\threadtools\\custommanualresetevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\collectiontools\\synccollections\\syncdictionary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\collectiontools\\synccollections\\syncdictionary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\mikoutools.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\mikoutools.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\stringtools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\stringtools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\collectiontools\\threadsafecollections\\threadsafelist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\collectiontools\\threadsafecollections\\threadsafelist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\threadtools\\threadmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|solutionrelative:mikoutools\\threadtools\\threadmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D0F9B6F8-2765-4F8F-BCF8-2082901A8CFB}|MikouTools\\MikouTools.csproj|f:\\.programrelated\\visual studio\\program folder\\.dll\\mikoutools\\mikoutools\\directorytools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -50,11 +62,50 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "StringTools.cs",
+              "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\StringTools.cs",
+              "RelativeDocumentMoniker": "MikouTools\\StringTools.cs",
+              "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\StringTools.cs",
+              "RelativeToolTip": "MikouTools\\StringTools.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAmwA4AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-04T06:25:46.919Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MikouTools.csproj",
+              "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\MikouTools.csproj",
+              "RelativeDocumentMoniker": "MikouTools\\MikouTools.csproj",
+              "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\MikouTools.csproj",
+              "RelativeToolTip": "MikouTools\\MikouTools.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-02-04T06:24:48.707Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "SyncDictionary.cs",
+              "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\SyncCollections\\SyncDictionary.cs",
+              "RelativeDocumentMoniker": "MikouTools\\CollectionTools\\SyncCollections\\SyncDictionary.cs",
+              "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\SyncCollections\\SyncDictionary.cs",
+              "RelativeToolTip": "MikouTools\\CollectionTools\\SyncCollections\\SyncDictionary.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-03T23:54:49.065Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "CustomManualResetEvent.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\ThreadTools\\CustomManualResetEvent.cs",
               "RelativeDocumentMoniker": "MikouTools\\ThreadTools\\CustomManualResetEvent.cs",
@@ -62,44 +113,47 @@
               "RelativeToolTip": "MikouTools\\ThreadTools\\CustomManualResetEvent.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-19T02:38:17.34Z"
+              "WhenOpened": "2025-01-19T02:38:17.34Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "CustomQueue.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\CustomCollections\\CustomQueue.cs",
               "RelativeDocumentMoniker": "MikouTools\\CollectionTools\\CustomCollections\\CustomQueue.cs",
               "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\CustomCollections\\CustomQueue.cs",
               "RelativeToolTip": "MikouTools\\CollectionTools\\CustomCollections\\CustomQueue.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-19T02:38:04.672Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "SignalingQueue.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\SignalingCollections\\SignalingQueue.cs",
               "RelativeDocumentMoniker": "MikouTools\\CollectionTools\\SignalingCollections\\SignalingQueue.cs",
               "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\SignalingCollections\\SignalingQueue.cs",
               "RelativeToolTip": "MikouTools\\CollectionTools\\SignalingCollections\\SignalingQueue.cs",
-              "ViewState": "AgIAAEwAAAAAAAAAAAAqwGsAAAA6AAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-19T02:37:39.268Z"
+              "WhenOpened": "2025-01-19T02:37:39.268Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "LockableProperty.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\UtilityTools\\Threading\\LockableProperty.cs",
               "RelativeDocumentMoniker": "MikouTools\\UtilityTools\\Threading\\LockableProperty.cs",
               "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\UtilityTools\\Threading\\LockableProperty.cs",
               "RelativeToolTip": "MikouTools\\UtilityTools\\Threading\\LockableProperty.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABMAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-19T02:14:55.647Z"
+              "WhenOpened": "2025-01-19T02:14:55.647Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -109,39 +163,38 @@
               "RelativeDocumentMoniker": "MikouTools\\ThreadTools\\ThreadResourceManager.cs",
               "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\ThreadTools\\ThreadResourceManager.cs",
               "RelativeToolTip": "MikouTools\\ThreadTools\\ThreadResourceManager.cs",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAAHEAAABYAAAAAAAAAA==",
+              "ViewState": "AgIAACwAAAAAAAAAAADwvzEAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-17T10:47:24.405Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "ThreadSafeList.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\ThreadSafeCollections\\ThreadSafeList.cs",
               "RelativeDocumentMoniker": "MikouTools\\CollectionTools\\ThreadSafeCollections\\ThreadSafeList.cs",
               "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\CollectionTools\\ThreadSafeCollections\\ThreadSafeList.cs",
               "RelativeToolTip": "MikouTools\\CollectionTools\\ThreadSafeCollections\\ThreadSafeList.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAAD8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-16T07:52:34.227Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 9,
               "Title": "ThreadManager.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\ThreadTools\\ThreadManager.cs",
               "RelativeDocumentMoniker": "MikouTools\\ThreadTools\\ThreadManager.cs",
               "ToolTip": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\ThreadTools\\ThreadManager.cs",
               "RelativeToolTip": "MikouTools\\ThreadTools\\ThreadManager.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAkwBUAAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T08:35:25.232Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-10T08:35:25.232Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "PathTools.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\PathTools.cs",
               "RelativeDocumentMoniker": "MikouTools\\PathTools.cs",
@@ -153,7 +206,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "DirectoryTools.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\DirectoryTools.cs",
               "RelativeDocumentMoniker": "MikouTools\\DirectoryTools.cs",
@@ -165,7 +218,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "FileTools.cs",
               "DocumentMoniker": "F:\\.ProgramRelated\\Visual Studio\\Program Folder\\.DLL\\MikouTools\\MikouTools\\FileTools.cs",
               "RelativeDocumentMoniker": "MikouTools\\FileTools.cs",

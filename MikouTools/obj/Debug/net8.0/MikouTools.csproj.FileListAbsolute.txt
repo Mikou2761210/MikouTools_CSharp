@@ -20,3 +20,4 @@ F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\D
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\refint\MikouTools.dll
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.pdb
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\ref\MikouTools.dll
+F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.sourcelink.json
