@@ -1,14 +1,3 @@
-E:\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\bin\Debug\net8.0\MikouTools.deps.json
-E:\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\bin\Debug\net8.0\MikouTools.dll
-E:\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\bin\Debug\net8.0\MikouTools.pdb
-E:\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.GeneratedMSBuildEditorConfig.editorconfig
-E:\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.AssemblyInfoInputs.cache
-E:\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.AssemblyInfo.cs
-E:\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.csproj.CoreCompileInputs.cache
-E:\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.dll
-E:\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\refint\MikouTools.dll
-E:\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.pdb
-E:\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\ref\MikouTools.dll
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\bin\Debug\net8.0\MikouTools.deps.json
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\bin\Debug\net8.0\MikouTools.dll
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\bin\Debug\net8.0\MikouTools.pdb
@@ -16,8 +5,8 @@ F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\D
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.AssemblyInfoInputs.cache
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.AssemblyInfo.cs
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.csproj.CoreCompileInputs.cache
+F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.sourcelink.json
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.dll
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\refint\MikouTools.dll
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.pdb
 F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\ref\MikouTools.dll
-F:\.ProgramRelated\Visual Studio\Program Folder\.DLL\MikouTools\MikouTools\obj\Debug\net8.0\MikouTools.sourcelink.json

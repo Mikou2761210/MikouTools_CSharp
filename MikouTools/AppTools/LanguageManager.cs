@@ -20,17 +20,19 @@ namespace MikouTools.AppTools
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public LanguageManager(string _LangDirectoryPath, string _MasterLanguageCode, string[] MasterKeys, string[] MasterLanguageResources)
+        public LanguageManager(string _LangDirectoryPath, string _MasterLanguageCode, Dictionary<string, string> MasterKey_MasterResources)
         {
             if (!Directory.Exists(_LangDirectoryPath)) throw new DirectoryNotFoundException($"DirectoryNotFound {_LangDirectoryPath}");
             LangDirectoryPath = _LangDirectoryPath;
             MasterLanguageCode = _MasterLanguageCode;
-            _masterLanguageResources = MasterLanguageResources;
-            for (int i = 0; i < MasterKeys.Length; i++)
+            _masterLanguageResources = MasterKey_MasterResources.Values.ToArray();
+            Dictionary<string, string>.KeyCollection MasterKeys = MasterKey_MasterResources.Keys;
+            int i = 0;
+            foreach (string key in MasterKeys)
             {
-                _keytoIndex.Add(MasterKeys[i], i);
+                _keytoIndex.Add(key, i++);
             }
-            _currentLanguageResources = new string[MasterKeys.Length];
+            _currentLanguageResources = new string[MasterKeys.Count];
             ChangeLanguage(_MasterLanguageCode);
             if (CurrentLanguageCode == null) throw new NullReferenceException();
         }
@@ -82,6 +84,7 @@ namespace MikouTools.AppTools
                     {
                         _currentLanguageResources[index] = key_value[1];
                         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"Item[{key_value[0]}]"));
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"[{key_value[0]}]"));
                     }
                 }
 
@@ -91,13 +94,16 @@ namespace MikouTools.AppTools
             {
                 CurrentLanguageCode = MasterLanguageCode;
                 _currentLanguageResources = _masterLanguageResources.ToArray();
+                int i = 0;
                 foreach (string key in _keytoIndex.Keys)
                 {
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"Item[{key}]"));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"[{key}]"));
                 }
                 return false;
             }
         }
 
     }
+
 }
