@@ -29,7 +29,7 @@ namespace MikouTools.ThreadTools
             set { thread.Name = value; }
         }
 
-        public ThreadManager(string? _ThreadName = null, bool IsBackground = true)
+        public ThreadManager(string? _ThreadName = null, bool IsBackground = true , ApartmentState? ApartmentState = null)
         {
             thread = new Thread(() =>
             {
@@ -48,7 +48,8 @@ namespace MikouTools.ThreadTools
             });
             ThreadName = _ThreadName;
             thread.IsBackground = IsBackground;
-            Debug.WriteLine(thread.ThreadState);
+            if (ApartmentState != null)
+                thread.SetApartmentState((ApartmentState)ApartmentState);
         }
 
         LockableProperty<ThreadManagerState> _threadManagerState = new LockableProperty<ThreadManagerState>(ThreadManagerState.Idle);
@@ -82,7 +83,6 @@ namespace MikouTools.ThreadTools
 
         public void Dispose()
         {
-            Debug.WriteLine("dispose=========");
             if (!dispose.SetAndReturnOld(true))
             {
                 ProcessQueue.AddAllow = false;
