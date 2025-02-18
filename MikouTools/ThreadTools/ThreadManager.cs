@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -22,6 +23,8 @@ namespace MikouTools.ThreadTools
         internal Thread thread;
 
         CountSignalingQueue<Process> ProcessQueue = new CountSignalingQueue<Process>(count => count > 0);
+
+        //public Exception? LastException = null;
 
         public string? ThreadName
         {
@@ -56,7 +59,7 @@ namespace MikouTools.ThreadTools
         public ThreadManagerState ThreadState { get { return _threadManagerState.Value; } }
 
 
-        public void Invoke(Action action)
+        public bool Invoke(Action action, Exception? exception)
         {
             if (dispose.Value) throw new ObjectDisposedException("ThreadManager");
 
@@ -66,6 +69,15 @@ namespace MikouTools.ThreadTools
             Process process = new Process(action);
             ProcessQueue.Enqueue(process);
             process.ProcessCompletedWait();
+            if(process.InvokeException!= null)
+            {
+                exception = process.InvokeException;
+                return false;
+            }
+            else
+            {
+                return true;
+            }
 
 
         }
@@ -105,20 +117,34 @@ namespace MikouTools.ThreadTools
             CustomManualResetEvent _manualResetEvent = new CustomManualResetEvent(false);
 
             LockableProperty<bool> _invokecheck = new LockableProperty<bool>(false);
+
+            public Exception? InvokeException { get; private set; }
             public Process(Action action)
             {
                 _action = action;
             }
 
-            public void Invoke()
+            public bool Invoke()
             {
                 if (dispose.Value) throw new ObjectDisposedException("Process");
+                bool result = false;
                 if (!_invokecheck.SetAndReturnOld(true))
                 {
-                    _action.Invoke();
-                    _manualResetEvent.Set();
+                    try
+                    {
+                        _action.Invoke();
+                        result = true;
+                    }
+                    catch(Exception ex)
+                    {
+                        InvokeException = ex;
+                    }
+                    finally
+                    {
+                        _manualResetEvent.Set();
+                    }
                 }
-
+                return result;
             }
             public void ProcessCompletedWait()
             {
