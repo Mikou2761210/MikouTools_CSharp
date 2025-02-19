@@ -13,7 +13,7 @@ namespace MikouTools.CollectionTools.DirtySortCollections
     {
 
         public bool IsDirty { get; private set; } = false;
-        public IComparer<T>? LastComparer { get; private set; }  = noting;
+        public IComparer<T>? LastComparer { get; private set; } = null;
         public Comparison<T>? LastComparison { get; private set; } = null;
 
 
@@ -114,7 +114,7 @@ namespace MikouTools.CollectionTools.DirtySortCollections
 
         public new void Sort(int index, int count, IComparer<T>? comparer)
         {
-            if (IsDirty || LastComparison != null && comparer == null || comparer?.Equals(LastComparer) == false) 
+            if (IsDirty || (LastComparison != null && comparer == null) || comparer?.Equals(LastComparer) == false) 
             {
                 base.Sort(index, count, comparer);
                 LastComparer = comparer;
