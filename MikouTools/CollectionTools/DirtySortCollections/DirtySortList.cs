@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +13,8 @@ namespace MikouTools.CollectionTools.DirtySortCollections
     {
 
         public bool IsDirty { get; private set; } = false;
-        public IComparer<T>? LastComparer = null;
+        public IComparer<T>? LastComparer { get; private set; }  = noting;
+        public Comparison<T>? LastComparison { get; private set; } = null;
 
 
         private void MarkDirty()
@@ -111,10 +114,21 @@ namespace MikouTools.CollectionTools.DirtySortCollections
 
         public new void Sort(int index, int count, IComparer<T>? comparer)
         {
-            if (IsDirty || comparer?.Equals(LastComparer) == false)
+            if (IsDirty || LastComparison != null && comparer == null || comparer?.Equals(LastComparer) == false) 
             {
                 base.Sort(index, count, comparer);
                 LastComparer = comparer;
+                LastComparison = null;
+                IsDirty = false;
+            }
+        }
+        public new void Sort(Comparison<T> comparison)
+        {
+            if (IsDirty || comparison?.Equals(LastComparer) == false)
+            {
+                base.Sort(comparison);
+                LastComparer = null;
+                LastComparison = comparison;
                 IsDirty = false;
             }
         }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MikouTools")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7e45632b710b720599abb7bd14af96b2a4ea8b6d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb6a661b7db8ea3783b3ee2183f3129d6d52a40b")]
 [assembly: System.Reflection.AssemblyProductAttribute("MikouTools")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MikouTools")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
