@@ -108,11 +108,11 @@ namespace MikouTools.CollectionTools.DirtySortCollections
 
 
 
-        public new void Sort() => Sort(0, base.Count, null);
+        public new bool Sort() => Sort(0, base.Count, null);
 
-        public new void Sort(IComparer<T>? comparer) => Sort(0, base.Count, comparer);
+        public new bool Sort(IComparer<T>? comparer) => Sort(0, base.Count, comparer);
 
-        public new void Sort(int index, int count, IComparer<T>? comparer)
+        public new bool Sort(int index, int count, IComparer<T>? comparer)
         {
             if (IsDirty || (LastComparison != null && comparer == null) || comparer?.Equals(LastComparer) == false) 
             {
@@ -120,9 +120,11 @@ namespace MikouTools.CollectionTools.DirtySortCollections
                 LastComparer = comparer;
                 LastComparison = null;
                 IsDirty = false;
+                return true;
             }
+            return false;
         }
-        public new void Sort(Comparison<T> comparison)
+        public new bool Sort(Comparison<T> comparison)
         {
             if (IsDirty || comparison?.Equals(LastComparer) == false)
             {
@@ -130,7 +132,9 @@ namespace MikouTools.CollectionTools.DirtySortCollections
                 LastComparer = null;
                 LastComparison = comparison;
                 IsDirty = false;
+                return true;
             }
+            return false;
         }
 
 
