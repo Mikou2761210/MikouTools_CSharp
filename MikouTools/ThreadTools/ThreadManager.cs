@@ -59,7 +59,7 @@ namespace MikouTools.ThreadTools
         public ThreadManagerState ThreadState { get { return _threadManagerState.Value; } }
 
 
-        public bool Invoke(Action action, Exception? outputException = null)
+        public Exception? Invoke(Action action)
         {
             if (dispose.Value) throw new ObjectDisposedException("ThreadManager");
 
@@ -69,17 +69,7 @@ namespace MikouTools.ThreadTools
             Process process = new Process(action);
             ProcessQueue.Enqueue(process);
             process.ProcessCompletedWait();
-            if(process.InvokeException!= null)
-            {
-                outputException = process.InvokeException;
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-
-
+            return process.InvokeException;
         }
 
         public void InvokeAsync(Action action)
