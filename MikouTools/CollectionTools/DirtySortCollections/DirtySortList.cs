@@ -13,6 +13,7 @@ namespace MikouTools.CollectionTools.DirtySortCollections
     {
 
         public bool IsDirty { get; private set; } = false;
+
         public IComparer<T>? LastComparer { get; private set; } = null;
         public Comparison<T>? LastComparison { get; private set; } = null;
 
@@ -137,6 +138,13 @@ namespace MikouTools.CollectionTools.DirtySortCollections
             return false;
         }
 
+        public bool RedoLastSort()
+        {
+            if (LastComparison == null)
+                return Sort(0, base.Count, LastComparer);
+            else
+                return Sort(LastComparison);
+        }
 
     }
 }
