@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace MikouTools
 {
@@ -36,9 +32,7 @@ namespace MikouTools
 
                 if (File.Exists(Path) || System.IO.Directory.Exists(Path))
                 {
-                    //拡張子なしのファイルパッチ
                     string DirectoryPath = $@"{System.IO.Path.GetDirectoryName(Path)}\{System.IO.Path.GetFileNameWithoutExtension(Path)}";
-                    //拡張子
                     string Extension = System.IO.Path.GetExtension(Path);
                     int index = 2;
                     while (true)

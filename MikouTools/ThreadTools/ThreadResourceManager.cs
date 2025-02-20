@@ -1,14 +1,6 @@
 ﻿using MikouTools.CollectionTools.ThreadSafeCollections;
 using MikouTools.UtilityTools.Threading;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MikouTools.ThreadTools
 {
@@ -17,8 +9,8 @@ namespace MikouTools.ThreadTools
         Thread _thread;
         ThreadSafeList<ThreadResourceCleanup> _threadCleanupTasks = new ThreadSafeList<ThreadResourceCleanup>();
         int _pollingInterval = 1000;
-        LockableProperty<bool> _dispose = new LockableProperty<bool>(false); 
-        LockableProperty<bool> _threadStart = new LockableProperty<bool>(false);
+        private readonly LockableProperty<bool> _dispose = new LockableProperty<bool>(false); 
+        private readonly LockableProperty<bool> _threadStart = new LockableProperty<bool>(false);
 
 
         public int PollingInterval

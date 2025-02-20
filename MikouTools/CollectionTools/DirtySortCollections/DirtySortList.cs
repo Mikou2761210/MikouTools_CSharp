@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MikouTools.CollectionTools.DirtySortCollections
+﻿namespace MikouTools.CollectionTools.DirtySortCollections
 {
 
     public class DirtySortList<T> : List<T>, IList<T>

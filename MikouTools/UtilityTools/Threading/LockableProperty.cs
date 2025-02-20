@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MikouTools.UtilityTools.Threading
+﻿namespace MikouTools.UtilityTools.Threading
 {
     public class LockableProperty<T> : ILockableProperty<T>
     {
@@ -29,7 +23,6 @@ namespace MikouTools.UtilityTools.Threading
             set
             {
                 lock (_lock) _value = value;
-
             }
         }
 
