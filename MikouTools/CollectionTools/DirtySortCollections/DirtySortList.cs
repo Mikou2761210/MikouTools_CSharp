@@ -12,7 +12,7 @@ namespace MikouTools.CollectionTools.DirtySortCollections
     public class DirtySortList<T> : List<T>, IList<T>
     {
 
-        public bool IsDirty { get; private set; } = false;
+        public bool IsDirty = false;
 
         public IComparer<T>? LastComparer { get; private set; } = null;
         public Comparison<T>? LastComparison { get; private set; } = null;
@@ -21,10 +21,6 @@ namespace MikouTools.CollectionTools.DirtySortCollections
         private void MarkDirty()
         {
             IsDirty = true;
-        }
-        public void AcceptChanges()
-        {
-            IsDirty = false;
         }
 
 
