@@ -1,7 +1,7 @@
-﻿using MikouTools.UtilityTools.Threading;
+﻿using MikouTools.Thread.Utils;
 using System.Collections;
 
-namespace MikouTools.CollectionTools.ThreadSafeCollections
+namespace MikouTools.Thread.ThreadSafe.Collections
 {
 
     public class ThreadSafeList<T> : IList<T>, IReadOnlyList<T>

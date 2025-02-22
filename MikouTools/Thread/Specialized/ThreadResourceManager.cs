@@ -1,12 +1,13 @@
-﻿using MikouTools.CollectionTools.ThreadSafeCollections;
-using MikouTools.UtilityTools.Threading;
+﻿using MikouTools.Thread.Specialized;
+using MikouTools.Thread.ThreadSafe.Collections;
+using MikouTools.Thread.Utils;
 using System.Diagnostics;
 
 namespace MikouTools.ThreadTools
 {
     public partial class ThreadResourceManager : IDisposable
     {
-        Thread _thread;
+        System.Threading.Thread _thread;
         ThreadSafeList<ThreadResourceCleanup> _threadCleanupTasks = new ThreadSafeList<ThreadResourceCleanup>();
         int _pollingInterval = 1000;
         private readonly LockableProperty<bool> _dispose = new LockableProperty<bool>(false); 
@@ -40,7 +41,7 @@ namespace MikouTools.ThreadTools
         public ThreadResourceManager(string? ThreadName = null)
         {
             _threadCleanupTasks.Lock();
-            _thread = new Thread(() =>
+            _thread = new System.Threading.Thread(() =>
             {
                 while (_threadCleanupTasks.Count > 0 && !_dispose.Value) 
                 {
@@ -78,7 +79,7 @@ namespace MikouTools.ThreadTools
                         }
                     }
                     if (_dispose.Value) break;
-                    Thread.Sleep(_pollingInterval);
+                    System.Threading.Thread.Sleep(_pollingInterval);
                 }
             });
             _thread.IsBackground = false;
@@ -89,7 +90,7 @@ namespace MikouTools.ThreadTools
 
 
         //Add
-        public void CleanupTaskAdd(Thread TargetThread,Action DisposeAction, Func<Thread, bool>? DisposeCondition = null)
+        public void CleanupTaskAdd(System.Threading.Thread TargetThread,Action DisposeAction, Func<System.Threading.Thread, bool>? DisposeCondition = null)
         {
             if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
 
@@ -101,13 +102,13 @@ namespace MikouTools.ThreadTools
             }
         }
 
-        public void CleanupTaskAdd(ThreadManager TargetThreadManager, Action DisposeAction, Func<Thread, bool>? DisposeCondition = null)
+        public void CleanupTaskAdd(ThreadManager TargetThreadManager, Action DisposeAction, Func<System.Threading.Thread, bool>? DisposeCondition = null)
         {
             CleanupTaskAdd(TargetThreadManager.thread, DisposeAction, DisposeCondition);
         }
 
         //Remove
-        public bool Remove(Thread TargetThread)
+        public bool Remove(System.Threading.Thread TargetThread)
         {
             if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
 
@@ -124,7 +125,7 @@ namespace MikouTools.ThreadTools
                 return false;
             }
         }
-        public bool RemoveAll(Thread TargetThread)
+        public bool RemoveAll(System.Threading.Thread TargetThread)
         {
             if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
 
@@ -143,7 +144,7 @@ namespace MikouTools.ThreadTools
                 return removeflag;
             }
         }
-        public bool DisposeRemove(Thread TargetThread)
+        public bool DisposeRemove(System.Threading.Thread TargetThread)
         {
             if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
 
@@ -165,7 +166,7 @@ namespace MikouTools.ThreadTools
                 return false;
             }
         }
-        public bool DisposeRemoveAll(Thread TargetThread)
+        public bool DisposeRemoveAll(System.Threading.Thread TargetThread)
         {
             if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
 
@@ -239,14 +240,14 @@ namespace MikouTools.ThreadTools
     {
         internal class ThreadResourceCleanup
         {
-            internal Thread TargetThread { get; private set; }
+            internal System.Threading.Thread TargetThread { get; private set; }
             internal Action DisposeAction { get; private set; }
 
 
-            internal Func<Thread, bool>? DisposeCondition;
+            internal Func<System.Threading.Thread, bool>? DisposeCondition;
 
 
-            internal ThreadResourceCleanup(Thread _TargetThread, Action _DisposeAction, Func<Thread, bool>? _DisposeCondition = null)
+            internal ThreadResourceCleanup(System.Threading.Thread _TargetThread, Action _DisposeAction, Func<System.Threading.Thread, bool>? _DisposeCondition = null)
             {
                 TargetThread = _TargetThread;
                 DisposeAction = _DisposeAction;

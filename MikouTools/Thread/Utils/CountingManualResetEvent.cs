@@ -1,12 +1,10 @@
-﻿using MikouTools.UtilityTools.Threading;
-
-namespace MikouTools.ThreadTools
+﻿namespace MikouTools.Thread.Utils
 {
-    public sealed class CustomManualResetEvent : EventWaitHandle
+    public sealed class CountingManualResetEvent : EventWaitHandle
     {
-        public CustomManualResetEvent(bool initialState) : base(initialState, EventResetMode.ManualReset) { }
+        public CountingManualResetEvent(bool initialState) : base(initialState, EventResetMode.ManualReset) { }
 
-        LockableProperty<int> count = new LockableProperty<int>(0);
+        private readonly LockableProperty<int> count = new(0);
         public int WaitCount
         {
             get { return count.Value; }

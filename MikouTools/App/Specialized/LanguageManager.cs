@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace MikouTools.AppTools
+namespace MikouTools.App.Specialized
 {
     public class LanguageManager : INotifyPropertyChanged
     {

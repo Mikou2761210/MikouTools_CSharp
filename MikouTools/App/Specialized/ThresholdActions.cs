@@ -1,4 +1,4 @@
-﻿namespace MikouTools.AppTools.LayoutTools
+﻿namespace MikouTools.App.Specialized
 {
     public class ThresholdActionManager
     {

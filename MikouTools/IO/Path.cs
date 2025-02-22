@@ -1,8 +1,10 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Text;
 
-namespace MikouTools
+namespace MikouTools.IO
 {
-    public static class PathTools
+    public static class Path
     {
         public static string ChangeUnusableCharacters(string name)
         {
@@ -25,12 +27,13 @@ namespace MikouTools
             return FullPath;
         }
 
+
         public static string AvoidPathDuplication(string Path, bool Directory = false, string Bracket_1 = " [", string Bracket_2 = "]")
         {
             if (!Directory)
             {
 
-                if (File.Exists(Path) || System.IO.Directory.Exists(Path))
+                if (System.IO.File.Exists(Path) || System.IO.Directory.Exists(Path))
                 {
                     string DirectoryPath = $@"{System.IO.Path.GetDirectoryName(Path)}\{System.IO.Path.GetFileNameWithoutExtension(Path)}";
                     string Extension = System.IO.Path.GetExtension(Path);
@@ -38,7 +41,7 @@ namespace MikouTools
                     while (true)
                     {
                         string newpath = $@"{DirectoryPath}{Bracket_1}{index}{Bracket_2}{Extension}";
-                        if (!File.Exists(newpath) && !System.IO.Directory.Exists(Path))
+                        if (!System.IO.File.Exists(newpath) && !System.IO.Directory.Exists(Path))
                         {
                             return newpath;
                         }
@@ -52,13 +55,13 @@ namespace MikouTools
             }
             else
             {
-                if (File.Exists(Path) || System.IO.Directory.Exists(Path))
+                if (System.IO.File.Exists(Path) || System.IO.Directory.Exists(Path))
                 {
                     int index = 2;
                     while (true)
                     {
                         string newpath = $@"{Path}{Bracket_1}{index}{Bracket_2}";
-                        if (!File.Exists(Path) && !System.IO.Directory.Exists(newpath))
+                        if (!System.IO.File.Exists(Path) && !System.IO.Directory.Exists(newpath))
                         {
                             return newpath;
                         }

@@ -1,16 +1,17 @@
-﻿using MikouTools.CollectionTools.CustomCollections;
-using MikouTools.UtilityTools.Threading;
+﻿using MikouTools.Collections.MultiLock;
+using MikouTools.Thread.Utils;
 
-namespace MikouTools.CollectionTools.SignalingCollections
+namespace MikouTools.Collections.Signaling
 {
-    public class CountSignalingQueue : CustomQueue
+    public class CountSignalingQueue : MultiLockQueue
     {
         private readonly object _lock = new object();
         private readonly ManualResetEvent _signal = new ManualResetEvent(false);
         private readonly LockableProperty<bool> _wait = new LockableProperty<bool>(true);
         public Func<int, bool> WaitCondition;
 
-
+        public override bool AddLock { get { lock (_lock) return base.AddLock; } set { lock (_lock) base.AddLock = value; } }
+        public override bool RemoveLock { get { lock (_lock) return base.RemoveLock; } set { lock (_lock) base.RemoveLock = value; } }
         /// <summary>
         /// (_WaitCondition == true)時にWaitをしない
         /// </summary>
@@ -80,6 +81,8 @@ namespace MikouTools.CollectionTools.SignalingCollections
         private readonly LockableProperty<bool> _wait = new LockableProperty<bool>(true);
         public Func<int, bool> WaitCondition;
 
+        public override bool AddLock { get { lock (_lock) return base.AddLock; } set { lock (_lock) base.AddLock = value; } }
+        public override bool RemoveLock { get { lock (_lock) return base.RemoveLock; } set { lock (_lock) base.RemoveLock = value; } }
 
         /// <summary>
         /// (_WaitCondition == true)時にWaitをしない
@@ -144,66 +147,6 @@ namespace MikouTools.CollectionTools.SignalingCollections
     }
 
 
-
-
-    [Obsolete]
-    public class SignalingQueue : CustomQueue
-    {
-        private readonly object _lock = new object();
-        private readonly ManualResetEvent _signal = new ManualResetEvent(false);
-
-        public override void Enqueue(object? obj)
-        {
-            lock (_lock)
-            {
-                base.Enqueue(obj);
-                _signal.Set();
-            }
-        }
-
-        public virtual void AddSignalWait()
-        {
-            AddSignalWait(-1);
-        }
-        public virtual bool AddSignalWait(int millisecondsTimeout)
-        {
-            lock (_lock)
-                if (base.Count > 0)
-                    _signal.Reset();
-
-            return _signal.WaitOne(millisecondsTimeout);
-        }
-    }
-
-    [Obsolete]
-    public class SignalingQueue<T> : CustomQueue<T>
-    {
-        private readonly object _lock = new object();
-        private readonly ManualResetEvent _signal = new ManualResetEvent(false);
-
-        public new void Enqueue(T item)
-        {
-            lock (_lock)
-            {
-                base.Enqueue(item);
-                _signal.Set();
-            }
-
-        }
-
-        public virtual void AddSignalWait()
-        {
-            AddSignalWait(-1);
-        }
-        public virtual bool AddSignalWait(int millisecondsTimeout)
-        {
-            lock (_lock)
-                if (base.Count > 0)
-                    _signal.Reset();
-
-            return _signal.WaitOne(millisecondsTimeout);
-        }
-    }
 
 
 }

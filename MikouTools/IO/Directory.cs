@@ -1,53 +1,53 @@
-﻿namespace MikouTools
+﻿namespace MikouTools.IO
 {
 
-    public static class DirectoryTools
+    public static class Directory
     {
         public static bool CreateDirectory(string Path, bool Overwrite = true, bool Hidden = false)
         {
-            if (!Overwrite && Directory.Exists(Path)) return false;
+            if (!Overwrite && System.IO.Directory.Exists(Path)) return false;
 
             string? dirpath = System.IO.Path.GetDirectoryName(Path);
             if (dirpath == null) { return false; }
-            if (!Directory.Exists(dirpath))
+            if (!System.IO.Directory.Exists(dirpath))
             {
                 CreateDirectory(dirpath, false);
             }
 
 
-            Directory.CreateDirectory(Path);
+            System.IO.Directory.CreateDirectory(Path);
             if (Hidden)
             {
-                System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(Path);
-                di.Attributes |= System.IO.FileAttributes.Hidden;
+                DirectoryInfo di = new DirectoryInfo(Path);
+                di.Attributes |= FileAttributes.Hidden;
             }
             return true;
         }
 
         public static void DeleteDirectory(string targetDirectoryPath)
         {
-            if (Directory.Exists(targetDirectoryPath))
+            if (System.IO.Directory.Exists(targetDirectoryPath))
             {
-                string[] filePaths = Directory.GetFiles(targetDirectoryPath);
+                string[] filePaths = System.IO.Directory.GetFiles(targetDirectoryPath);
                 foreach (string filePath in filePaths)
                 {
-                    File.SetAttributes(filePath, FileAttributes.Normal);
-                    File.Delete(filePath);
+                    System.IO.File.SetAttributes(filePath, FileAttributes.Normal);
+                    System.IO.File.Delete(filePath);
                 }
 
-                string[] directoryPaths = Directory.GetDirectories(targetDirectoryPath);
+                string[] directoryPaths = System.IO.Directory.GetDirectories(targetDirectoryPath);
                 foreach (string directoryPath in directoryPaths)
                 {
                     DeleteDirectory(directoryPath);
                 }
             }
 
-            Directory.Delete(targetDirectoryPath, false);
+            System.IO.Directory.Delete(targetDirectoryPath, false);
         }
 
         public static string AvoidPathDuplication(string Path, string Bracket_1 = " [", string Bracket_2 = "]")
         {
-            return PathTools.AvoidPathDuplication(Path, true, Bracket_1, Bracket_2);
+            return IO.Path.AvoidPathDuplication(Path, true, Bracket_1, Bracket_2);
         }
     }
 

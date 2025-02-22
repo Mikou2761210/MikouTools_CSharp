@@ -1,4 +1,4 @@
-﻿namespace MikouTools.CollectionTools.DirtySortCollections
+﻿namespace MikouTools.Collections.DirtySort
 {
 
     public class DirtySortList<T> : List<T>, IList<T>
@@ -103,7 +103,7 @@
 
         public new bool Sort(int index, int count, IComparer<T>? comparer)
         {
-            if (IsDirty || (LastComparison != null && comparer == null) || comparer?.Equals(LastComparer) == false) 
+            if (IsDirty || LastComparison != null && comparer == null || comparer?.Equals(LastComparer) == false) 
             {
                 base.Sort(index, count, comparer);
                 LastComparer = comparer;

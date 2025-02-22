@@ -1,4 +1,4 @@
-﻿namespace MikouTools.UtilityTools.Threading
+﻿namespace MikouTools.Thread.Utils
 {
     public class LockableProperty<T> : ILockableProperty<T>
     {

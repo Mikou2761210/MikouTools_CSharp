@@ -1,7 +1,8 @@
-﻿using MikouTools.CollectionTools.SignalingCollections;
-using MikouTools.UtilityTools.Threading;
+﻿using MikouTools.Collections.Signaling;
+using MikouTools.Thread.Utils;
+using System.Threading;
 
-namespace MikouTools.ThreadTools
+namespace MikouTools.Thread.Specialized
 {
     public enum ThreadManagerState
     {
@@ -9,7 +10,7 @@ namespace MikouTools.ThreadTools
     }
     public class ThreadManager : IDisposable
     {
-        internal Thread thread;
+        internal System.Threading.Thread thread;
 
         CountSignalingQueue<Process> ProcessQueue = new CountSignalingQueue<Process>(count => count > 0);
 
@@ -23,7 +24,7 @@ namespace MikouTools.ThreadTools
 
         public ThreadManager(string? _ThreadName = null, bool IsBackground = true , ApartmentState? ApartmentState = null)
         {
-            thread = new Thread(() =>
+            thread = new System.Threading.Thread(() =>
             {
                 while (!dispose.Value)
                 {
@@ -76,7 +77,7 @@ namespace MikouTools.ThreadTools
         {
             if (!dispose.SetAndReturnOld(true))
             {
-                ProcessQueue.AddAllow = false;
+                ProcessQueue.AddLock = true;
                 ProcessQueue.DisableWait();
                 thread.Join();
                 _threadManagerState.Value  = ThreadManagerState.Dispose;
@@ -93,7 +94,7 @@ namespace MikouTools.ThreadTools
         {
             Action _action;
 
-            CustomManualResetEvent _manualResetEvent = new CustomManualResetEvent(false);
+            CountingManualResetEvent _manualResetEvent = new CountingManualResetEvent(false);
 
             LockableProperty<bool> _invokecheck = new LockableProperty<bool>(false);
 
