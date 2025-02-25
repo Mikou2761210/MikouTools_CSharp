@@ -2,28 +2,29 @@
 using MikouTools.Thread.ThreadSafe.Collections;
 using MikouTools.Thread.Utils;
 using System.Diagnostics;
+using System.Threading;
 
 namespace MikouTools.ThreadTools
 {
     public partial class ThreadResourceManager : IDisposable
     {
-        System.Threading.Thread _thread;
-        ThreadSafeList<ThreadResourceCleanup> _threadCleanupTasks = new ThreadSafeList<ThreadResourceCleanup>();
-        int _pollingInterval = 1000;
-        private readonly LockableProperty<bool> _dispose = new LockableProperty<bool>(false); 
-        private readonly LockableProperty<bool> _threadStart = new LockableProperty<bool>(false);
+        private readonly System.Threading.Thread _thread;
+        private readonly ThreadSafeList<List<ThreadResourceCleanup>, ThreadResourceCleanup> _threadCleanupTasks = new([]);
+        private int _pollingInterval = 1000;
+        private readonly LockableProperty<bool> _dispose = new(false); 
+        private readonly LockableProperty<bool> _threadStart = new(false);
 
 
         public int PollingInterval
         {
             get 
             {
-                if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
+                ObjectDisposedException.ThrowIf(_dispose.Value, this);
                 return _pollingInterval; 
             }
             set
             {
-                if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
+                ObjectDisposedException.ThrowIf(_dispose.Value, this);
                 if (value < 10)
                     throw new IndexOutOfRangeException("value >= 10");
                 _pollingInterval = value;
@@ -40,10 +41,10 @@ namespace MikouTools.ThreadTools
 
         public ThreadResourceManager(string? ThreadName = null)
         {
-            _threadCleanupTasks.Lock();
+            _threadCleanupTasks.EnterLock();
             _thread = new System.Threading.Thread(() =>
             {
-                while (_threadCleanupTasks.Count > 0 && !_dispose.Value) 
+                while (_threadCleanupTasks.Count > 0 && !_dispose.Value)
                 {
                     using (var LockHandle = _threadCleanupTasks.LockAndGetList())
                     {
@@ -81,10 +82,12 @@ namespace MikouTools.ThreadTools
                     if (_dispose.Value) break;
                     System.Threading.Thread.Sleep(_pollingInterval);
                 }
-            });
-            _thread.IsBackground = false;
-            _thread.Name = ThreadName;
-            _threadCleanupTasks.UnLock();
+            })
+            {
+                IsBackground = false,
+                Name = ThreadName
+            };
+            _threadCleanupTasks.ExitLock();
         }
 
 
@@ -92,7 +95,7 @@ namespace MikouTools.ThreadTools
         //Add
         public void CleanupTaskAdd(System.Threading.Thread TargetThread,Action DisposeAction, Func<System.Threading.Thread, bool>? DisposeCondition = null)
         {
-            if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
+            ObjectDisposedException.ThrowIf(_dispose.Value, this);
 
             _threadCleanupTasks.Add(new ThreadResourceCleanup(TargetThread, DisposeAction, DisposeCondition));
 
@@ -110,112 +113,67 @@ namespace MikouTools.ThreadTools
         //Remove
         public bool Remove(System.Threading.Thread TargetThread)
         {
-            if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
+            ObjectDisposedException.ThrowIf(_dispose.Value, this);
 
-            using (var LockHandle = _threadCleanupTasks.LockAndGetList())
+            using var LockHandle = _threadCleanupTasks.LockAndGetList();
+            for (int i = 0; i < LockHandle.List.Count; i++)
             {
-                for (int i = 0; i < LockHandle.List.Count; i++)
+                if (LockHandle.List[i].TargetThread == TargetThread)
                 {
-                    if (LockHandle.List[i].TargetThread == TargetThread)
-                    {
-                        LockHandle.List.RemoveAt(i);
-                        return true;
-                    }
-                }                
-                return false;
+                    LockHandle.List.RemoveAt(i);
+                    return true;
+                }
             }
+            return false;
         }
         public bool RemoveAll(System.Threading.Thread TargetThread)
         {
-            if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
+            ObjectDisposedException.ThrowIf(_dispose.Value, this);
 
             bool removeflag = false;
-            using (var LockHandle = _threadCleanupTasks.LockAndGetList())
+            using var LockHandle = _threadCleanupTasks.LockAndGetList();
+            for (int i = 0; i < LockHandle.List.Count; i++)
             {
-                for (int i = 0; i < LockHandle.List.Count; i++)
+                if (LockHandle.List[i].TargetThread == TargetThread)
                 {
-                    if (LockHandle.List[i].TargetThread == TargetThread)
-                    {
-                        removeflag = true;
-                        LockHandle.List.RemoveAt(i);
-                        i--;
-                    }
-                }
-                return removeflag;
-            }
-        }
-        public bool DisposeRemove(System.Threading.Thread TargetThread)
-        {
-            if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
-
-            using (var LockHandle = _threadCleanupTasks.LockAndGetList())
-            {
-                for (int i = 0; i < LockHandle.List.Count; i++)
-                {
-                    if (LockHandle.List[i].TargetThread == TargetThread)
-                    {
-                        try
-                        {
-                            LockHandle.List[i].DisposeAction();
-                        }
-                        catch (Exception ex) { ErrorHelper(ex); }
-                        LockHandle.List.RemoveAt(i);
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-        public bool DisposeRemoveAll(System.Threading.Thread TargetThread)
-        {
-            if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
-
-            bool removeflag = false;
-            using (var LockHandle = _threadCleanupTasks.LockAndGetList())
-            {
-                for (int i = 0; i < LockHandle.List.Count; i++)
-                {
-                    if (LockHandle.List[i].TargetThread == TargetThread)
-                    {
-                        removeflag = true;
-                        try
-                        {
-                            LockHandle.List[i].DisposeAction();
-                        }
-                        catch (Exception ex) { ErrorHelper(ex); }
-                        LockHandle.List.RemoveAt(i);
-                        i--;
-                    }
-                }
-                return removeflag;
-            }
-        }
-
-        //Clear
-
-
-        public void Clear()
-        {
-            if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
-
-            using (var LockHandle = _threadCleanupTasks.LockAndGetList())
-            {
-                for (int i = 0; i < LockHandle.List.Count; i++)
-                {
+                    removeflag = true;
                     LockHandle.List.RemoveAt(i);
                     i--;
                 }
             }
+            return removeflag;
         }
-
-        public void DisposeClear()
+        public bool DisposeRemove(System.Threading.Thread TargetThread)
         {
-            if (_dispose.Value) throw new ObjectDisposedException("ThreadResourceManager");
+            ObjectDisposedException.ThrowIf(_dispose.Value, this);
 
-            using (var LockHandle = _threadCleanupTasks.LockAndGetList())
+            using var LockHandle = _threadCleanupTasks.LockAndGetList();
+            for (int i = 0; i < LockHandle.List.Count; i++)
             {
-                for (int i = 0; i < LockHandle.List.Count; i++)
+                if (LockHandle.List[i].TargetThread == TargetThread)
                 {
+                    try
+                    {
+                        LockHandle.List[i].DisposeAction();
+                    }
+                    catch (Exception ex) { ErrorHelper(ex); }
+                    LockHandle.List.RemoveAt(i);
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool DisposeRemoveAll(System.Threading.Thread TargetThread)
+        {
+            ObjectDisposedException.ThrowIf(_dispose.Value, this);
+
+            bool removeflag = false;
+            using var LockHandle = _threadCleanupTasks.LockAndGetList();
+            for (int i = 0; i < LockHandle.List.Count; i++)
+            {
+                if (LockHandle.List[i].TargetThread == TargetThread)
+                {
+                    removeflag = true;
                     try
                     {
                         LockHandle.List[i].DisposeAction();
@@ -225,6 +183,39 @@ namespace MikouTools.ThreadTools
                     i--;
                 }
             }
+            return removeflag;
+        }
+
+        //Clear
+
+
+        public void Clear()
+        {
+            ObjectDisposedException.ThrowIf(_dispose.Value, this);
+
+            using var LockHandle = _threadCleanupTasks.LockAndGetList();
+            for (int i = 0; i < LockHandle.List.Count; i++)
+            {
+                LockHandle.List.RemoveAt(i);
+                i--;
+            }
+        }
+
+        public void DisposeClear()
+        {
+            ObjectDisposedException.ThrowIf(_dispose.Value, this);
+
+            using var LockHandle = _threadCleanupTasks.LockAndGetList();
+            for (int i = 0; i < LockHandle.List.Count; i++)
+            {
+                try
+                {
+                    LockHandle.List[i].DisposeAction();
+                }
+                catch (Exception ex) { ErrorHelper(ex); }
+                LockHandle.List.RemoveAt(i);
+                i--;
+            }
         }
 
         public void Dispose()
@@ -232,6 +223,8 @@ namespace MikouTools.ThreadTools
             if(!_dispose.SetAndReturnOld(true))
             {
                 _thread.Join();
+                
+                GC.SuppressFinalize(this);
             }
         }
 

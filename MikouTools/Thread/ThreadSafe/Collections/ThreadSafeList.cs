@@ -3,12 +3,449 @@ using System.Collections;
 
 namespace MikouTools.Thread.ThreadSafe.Collections
 {
-
-    public class ThreadSafeList<T> : IList<T>, IReadOnlyList<T>
+    public class ThreadSafeList<TListType, TValue>(TListType _list) : List<TValue> where TListType : List<TValue>
     {
-        private readonly List<T> _list = new List<T>();
-        private readonly object _lock = new object();
-        private readonly LockableProperty<bool> _allowAdd = new LockableProperty<bool>(true);
+        private readonly object _lock = new();
+
+        public TListType InnerList
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _list;
+                }
+            }
+        }
+
+        public sealed class LockHandle : IDisposable
+        {
+            readonly object _lock;
+            private bool _disposed;
+            public TListType List { get; }
+
+
+            public LockHandle(object @lock, TListType list)
+            {
+                _lock = @lock;
+
+                Monitor.Enter(_lock);
+
+                List = list;
+
+            }
+
+
+            public void Dispose()
+            {
+                if (!_disposed)
+                {
+                    _disposed = true;
+                    Monitor.Exit(_lock);
+                }
+            }
+        }
+
+        public void EnterLock()
+        {
+            Monitor.Enter(_lock);
+        }
+
+        public void ExitLock()
+        {
+            Monitor.Exit(_lock);
+        }
+
+        public LockHandle LockAndGetList()
+        {
+            return new LockHandle(_lock, _list);
+        }
+
+
+        // Sets or Gets the element at the given index.
+        public new TValue this[int index]
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _list[index];
+                }
+            }
+
+            set
+            {
+                lock (_lock)
+                {
+                    _list[index] = value;
+                }
+            }
+        }
+
+
+        // Is this List synchronized (thread-safe)?
+
+        // Synchronization root for this object.
+
+        public IReadOnlyList<TValue> AccessListWhileLocked => _list;
+
+        public IReadOnlyList<TValue> Snapshot()
+        {
+            lock (_lock)
+            {
+                return _list.ToArray(); // 配列を返すことで外部から変更不可能にする
+            }
+        }
+
+        //ToString
+        public override string ToString()
+        {
+            lock (_lock)
+            {
+                return $"ThreadSafeList<{typeof(TValue).Name}>: [{string.Join(", ", _list)}]";
+            }
+        }
+
+        // Add
+        public new void Add(TValue item)
+        {
+            lock (_lock)
+            {
+                _list.Add(item);
+            }
+        }
+
+        public new void AddRange(IEnumerable<TValue> items)
+        {
+            lock (_lock)
+            {
+                _list.AddRange(items);
+            }
+        }
+
+        public new void Insert(int index, TValue item)
+        {
+            lock (_lock)
+            {
+                _list.Insert(index, item);
+            }
+        }
+
+        // Get
+        public TValue Get(int index)
+        {
+            lock (_lock)
+            {
+                return _list[index];
+            }
+        }
+
+        public bool TryGet(int index, out TValue result)
+        {
+            lock (_lock)
+            {
+                if (index >= 0 && index < _list.Count)
+                {
+                    result = _list[index];
+                    return true;
+                }
+                else
+                {
+                    result = default!;
+                    return false;
+                }
+            }
+        }
+
+        // GetRange
+        public new IReadOnlyList<TValue> GetRange(int index, int count)
+        {
+            lock (_lock)
+            {
+                return _list.GetRange(index, count);
+            }
+        }
+
+        public bool TryGetRange(int index, int count, out IReadOnlyList<TValue> result)
+        {
+            lock (_lock)
+            {
+                if (index >= 0 && count >= 0 && index <= _list.Count - count)
+                {
+                    result = _list.GetRange(index, count);
+                    return true;
+                }
+                else
+                {
+                    result = [];
+                    return false;
+                }
+            }
+        }
+
+        // Remove
+        public new bool Remove(TValue item)
+        {
+            lock (_lock)
+            {
+                return _list.Remove(item);
+            }
+        }
+
+        public new void RemoveAt(int index)
+        {
+            lock (_lock)
+            {
+                _list.RemoveAt(index);
+            }
+        }
+
+        public new void RemoveRange(int index, int count)
+        {
+            lock (_lock)
+            {
+                _list.RemoveRange(index, count);
+            }
+        }
+
+        public TValue RemoveAndGet(int index)
+        {
+            lock (_lock)
+            {
+                TValue result = _list[index];
+                _list.RemoveAt(index);
+                return result;
+            }
+        }
+
+        public bool TryRemoveAndGet(int index, out TValue result)
+        {
+            lock (_lock)
+            {
+                if (index >= 0 && index < _list.Count)
+                {
+                    result = _list[index];
+                    _list.RemoveAt(index);
+                    return true;
+                }
+                else
+                {
+                    result = default!;
+                    return false;
+                }
+            }
+        }
+
+        //Find
+        public new TValue? Find(Predicate<TValue> match)
+        {
+            lock (_lock)
+            {
+                return _list.Find(match);
+            }
+        }
+
+        public new List<TValue> FindAll(Predicate<TValue> match)
+        {
+            lock (_lock)
+            {
+                return _list.FindAll(match);
+            }
+        }
+
+        public new int FindIndex(Predicate<TValue> match)
+        {
+            lock (_lock)
+            {
+                return _list.FindIndex(match);
+            }
+        }
+
+        public new int FindLastIndex(Predicate<TValue> match)
+        {
+            lock (_lock)
+            {
+                return _list.FindLastIndex(match);
+            }
+        }
+
+        public new TValue? FindLast(Predicate<TValue> match)
+        {
+            lock (_lock)
+            {
+                return _list.FindLast(match);
+            }
+        }
+
+        //IndexOf
+        public new int IndexOf(TValue item)
+        {
+            lock (_lock)
+            {
+                return _list.IndexOf(item);
+            }
+        }
+
+        public new int LastIndexOf(TValue item)
+        {
+            lock (_lock)
+            {
+                return _list.LastIndexOf(item);
+            }
+        }
+
+        //Contains
+        public new bool Contains(TValue item)
+        {
+            lock (_lock)
+            {
+                return _list.Contains(item);
+            }
+        }
+
+        //Exists
+        public new bool Exists(Predicate<TValue> match)
+        {
+            lock (_lock)
+            {
+                return _list.Exists(match);
+            }
+        }
+
+        //TrueForAll
+        public new bool TrueForAll(Predicate<TValue> match)
+        {
+            lock (_lock)
+            {
+                return _list.TrueForAll(match);
+            }
+        }
+
+        //ForEach
+        public new void ForEach(Action<TValue> action)
+        {
+            lock (_lock)
+            {
+                _list.ForEach(action);
+            }
+        }
+
+        //BinarySearch
+        public new int BinarySearch(TValue item)
+        {
+            lock (_lock)
+            {
+                return _list.BinarySearch(item);
+            }
+        }
+
+        public new int BinarySearch(TValue item, IComparer<TValue> comparer)
+        {
+            lock (_lock)
+            {
+                return _list.BinarySearch(item, comparer);
+            }
+        }
+
+        //IEnumerator
+        public new IEnumerator<TValue> GetEnumerator()
+        {
+            lock (_lock)
+            {
+                _list.GetEnumerator();
+                return _list.AsReadOnly().GetEnumerator();
+            }
+        }
+
+        //CopyTo
+        public new void CopyTo(int index, TValue[] array, int arrayIndex, int count)
+        {
+            lock (_lock)
+            {
+                _list.CopyTo(index, array, arrayIndex, count);
+            }
+        }
+
+        public new void CopyTo(TValue[] array, int arrayIndex)
+        {
+            lock (_lock)
+            {
+                _list.CopyTo(array, arrayIndex);
+            }
+        }
+
+        // Clear
+        public new void Clear()
+        {
+            lock (_lock)
+            {
+                _list.Clear();
+            }
+        }
+
+        // Count
+        public new int Count
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _list.Count;
+                }
+            }
+        }
+
+        // Capacity
+        public new int Capacity
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _list.Capacity;
+                }
+            }
+            set
+            {
+                lock (_lock)
+                {
+                    _list.Capacity = value;
+                }
+            }
+        }
+
+        // Additional utility methods
+        public new TValue[] ToArray()
+        {
+            lock (_lock)
+            {
+                return _list.ToArray();
+            }
+        }
+
+        public new void Sort()
+        {
+            lock (_lock)
+            {
+                _list.Sort();
+            }
+        }
+
+        public new void Reverse()
+        {
+            lock (_lock)
+            {
+                _list.Reverse();
+            }
+        }
+    }
+
+    [Obsolete]
+    public class OldThreadSafeList<T> : IList<T>, IReadOnlyList<T>
+    {
+        private readonly List<T> _list = [];
+        private readonly object _lock = new();
+        private readonly LockableProperty<bool> _allowAdd = new(true);
 
         public sealed class LockHandle : IDisposable
         {
@@ -27,7 +464,7 @@ namespace MikouTools.Thread.ThreadSafe.Collections
             }
 
 
-            LockableProperty<bool> _dispose = new LockableProperty<bool>(false);
+            readonly LockableProperty<bool> _dispose = new(false);
 
             public void Dispose()
             {
@@ -93,7 +530,7 @@ namespace MikouTools.Thread.ThreadSafe.Collections
         {
             lock (_lock)
             {
-                return _list.ToArray(); // 配列を返すことで外部から変更不可能にする
+                return [.. _list]; // 配列を返すことで外部から変更不可能にする
             }
         }
 
@@ -180,7 +617,7 @@ namespace MikouTools.Thread.ThreadSafe.Collections
                 }
                 else
                 {
-                    result = Array.Empty<T>();
+                    result = [];
                     return false;
                 }
             }
@@ -423,7 +860,7 @@ namespace MikouTools.Thread.ThreadSafe.Collections
         {
             lock (_lock)
             {
-                return _list.ToArray();
+                return [.. _list];
             }
         }
 
@@ -443,371 +880,5 @@ namespace MikouTools.Thread.ThreadSafe.Collections
             }
         }
     }
-
-    [Obsolete]
-    public class AdvancedThreadSafeList<T> : IList<T>, IReadOnlyList<T>
-    {
-        private readonly List<T> _list = new List<T>();
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-        private readonly LockableProperty<bool> _allowAdd = new LockableProperty<bool>(true);
-
-        public sealed class LockHandle : IDisposable
-        {
-            private readonly SemaphoreSlim _semaphore;
-
-            public List<T> List { get; }
-
-
-            public LockHandle(SemaphoreSlim semaphore, List<T> list)
-            {
-                _semaphore = semaphore;
-                List = list;
-
-                semaphore.Wait();
-            }
-
-            LockableProperty<bool> _dispose = new LockableProperty<bool>(false);
-
-            public void Dispose()
-            {
-                if (!_dispose.SetAndReturnOld(true))
-                {
-                    _semaphore.Release();
-                }
-            }
-        }
-
-        public LockHandle LockAndGetList()
-        {
-            return new LockHandle(_semaphore, _list);
-        }
-
-        public void Lock()
-        {
-            _semaphore.Wait();
-        }
-        public void UnLock()
-        {
-            _semaphore.Release();
-        }
-
-        // Properties
-        public T this[int index]
-        {
-            get
-            {
-                _semaphore.Wait();
-                try { return _list[index]; }
-                finally { _semaphore.Release(); }
-            }
-            set
-            {
-                _semaphore.Wait();
-                try { _list[index] = value; }
-                finally { _semaphore.Release(); }
-            }
-        }
-
-        public bool AllowAdd
-        {
-            get { return _allowAdd.Value; }
-            set { _allowAdd.Value = value; }
-        }
-
-        bool ICollection<T>.IsReadOnly => false;
-
-        public IReadOnlyList<T> AccessListWhileLocked => _list;
-
-        public int Count
-        {
-            get
-            {
-                _semaphore.Wait();
-                try { return _list.Count; }
-                finally { _semaphore.Release(); }
-            }
-        }
-
-        public int Capacity
-        {
-            get
-            {
-                _semaphore.Wait();
-                try { return _list.Capacity; }
-                finally { _semaphore.Release(); }
-            }
-            set
-            {
-                _semaphore.Wait();
-                try { _list.Capacity = value; }
-                finally { _semaphore.Release(); }
-            }
-        }
-
-        // Methods
-
-        // Add methods
-        public void Add(T item)
-        {
-            _semaphore.Wait();
-            try
-            {
-                if (AllowAdd) _list.Add(item);
-            }
-            finally { _semaphore.Release(); }
-        }
-
-        public void AddRange(IEnumerable<T> items)
-        {
-            _semaphore.Wait();
-            try
-            {
-                if (AllowAdd) _list.AddRange(items);
-            }
-            finally { _semaphore.Release(); }
-        }
-
-        public void Insert(int index, T item)
-        {
-            _semaphore.Wait();
-            try { if (AllowAdd) _list.Insert(index, item); }
-            finally { _semaphore.Release(); }
-        }
-
-        // Remove methods
-        public bool Remove(T item)
-        {
-            _semaphore.Wait();
-            try { return _list.Remove(item); }
-            finally { _semaphore.Release(); }
-        }
-
-        public void RemoveAt(int index)
-        {
-            _semaphore.Wait();
-            try { _list.RemoveAt(index); }
-            finally { _semaphore.Release(); }
-        }
-
-        public void RemoveRange(int index, int count)
-        {
-            _semaphore.Wait();
-            try { _list.RemoveRange(index, count); }
-            finally { _semaphore.Release(); }
-        }
-
-        public T RemoveAndGet(int index)
-        {
-            _semaphore.Wait();
-            try
-            {
-                T result = _list[index];
-                _list.RemoveAt(index);
-                return result;
-            }
-            finally { _semaphore.Release(); }
-        }
-
-        public bool TryRemoveAndGet(int index, out T result)
-        {
-            _semaphore.Wait();
-            try
-            {
-                if (index >= 0 && index < _list.Count)
-                {
-                    result = _list[index];
-                    _list.RemoveAt(index);
-                    return true;
-                }
-                result = default!;
-                return false;
-            }
-            finally { _semaphore.Release(); }
-        }
-
-        // Access methods
-
-        public IReadOnlyList<T> GetRange(int index, int count)
-        {
-            _semaphore.Wait();
-            try { return _list.GetRange(index, count); }
-            finally { _semaphore.Release(); }
-        }
-
-        public bool TryGetRange(int index, int count, out IReadOnlyList<T> result)
-        {
-            _semaphore.Wait();
-            try
-            {
-                if (index >= 0 && count >= 0 && index <= _list.Count - count)
-                {
-                    result = _list.GetRange(index, count);
-                    return true;
-                }
-                result = Array.Empty<T>();
-                return false;
-            }
-            finally { _semaphore.Release(); }
-        }
-
-        public IReadOnlyList<T> Snapshot()
-        {
-            _semaphore.Wait();
-            try { return _list.ToArray(); }
-            finally { _semaphore.Release(); }
-        }
-
-        // Search methods
-        public T? Find(Predicate<T> match)
-        {
-            _semaphore.Wait();
-            try { return _list.Find(match); }
-            finally { _semaphore.Release(); }
-        }
-
-        public List<T> FindAll(Predicate<T> match)
-        {
-            _semaphore.Wait();
-            try { return _list.FindAll(match); }
-            finally { _semaphore.Release(); }
-        }
-
-        public int FindIndex(Predicate<T> match)
-        {
-            _semaphore.Wait();
-            try { return _list.FindIndex(match); }
-            finally { _semaphore.Release(); }
-        }
-
-        public int FindLastIndex(Predicate<T> match)
-        {
-            _semaphore.Wait();
-            try { return _list.FindLastIndex(match); }
-            finally { _semaphore.Release(); }
-        }
-
-        public T? FindLast(Predicate<T> match)
-        {
-            _semaphore.Wait();
-            try { return _list.FindLast(match); }
-            finally { _semaphore.Release(); }
-        }
-
-        // Other utility methods
-        public bool Contains(T item)
-        {
-            _semaphore.Wait();
-            try { return _list.Contains(item); }
-            finally { _semaphore.Release(); }
-        }
-
-        public bool Exists(Predicate<T> match)
-        {
-            _semaphore.Wait();
-            try { return _list.Exists(match); }
-            finally { _semaphore.Release(); }
-        }
-
-        public bool TrueForAll(Predicate<T> match)
-        {
-            _semaphore.Wait();
-            try { return _list.TrueForAll(match); }
-            finally { _semaphore.Release(); }
-        }
-
-        public void ForEach(Action<T> action)
-        {
-            _semaphore.Wait();
-            try { _list.ForEach(action); }
-            finally { _semaphore.Release(); }
-        }
-
-        public int IndexOf(T item)
-        {
-            _semaphore.Wait();
-            try { return _list.IndexOf(item); }
-            finally { _semaphore.Release(); }
-        }
-
-        public int LastIndexOf(T item)
-        {
-            _semaphore.Wait();
-            try { return _list.LastIndexOf(item); }
-            finally { _semaphore.Release(); }
-        }
-
-        public int BinarySearch(T item)
-        {
-            _semaphore.Wait();
-            try { return _list.BinarySearch(item); }
-            finally { _semaphore.Release(); }
-        }
-
-        public int BinarySearch(T item, IComparer<T> comparer)
-        {
-            _semaphore.Wait();
-            try { return _list.BinarySearch(item, comparer); }
-            finally { _semaphore.Release(); }
-        }
-
-        public void Sort()
-        {
-            _semaphore.Wait();
-            try { _list.Sort(); }
-            finally { _semaphore.Release(); }
-        }
-
-        public void Reverse()
-        {
-            _semaphore.Wait();
-            try { _list.Reverse(); }
-            finally { _semaphore.Release(); }
-        }
-
-        public void CopyTo(int index, T[] array, int arrayIndex, int count)
-        {
-            _semaphore.Wait();
-            try { _list.CopyTo(index, array, arrayIndex, count); }
-            finally { _semaphore.Release(); }
-        }
-
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            _semaphore.Wait();
-            try { _list.CopyTo(array, arrayIndex); }
-            finally { _semaphore.Release(); }
-        }
-
-        public T[] ToArray()
-        {
-            _semaphore.Wait();
-            try { return _list.ToArray(); }
-            finally { _semaphore.Release(); }
-        }
-
-        public void Clear()
-        {
-            _semaphore.Wait();
-            try { _list.Clear(); }
-            finally { _semaphore.Release(); }
-        }
-
-        // Enumerator
-        public IEnumerator<T> GetEnumerator()
-        {
-            _semaphore.Wait();
-            try { return _list.ToList().GetEnumerator(); }
-            finally { _semaphore.Release(); }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        // ToString
-        public override string ToString()
-        {
-            _semaphore.Wait();
-            try { return $"ThreadSafeList<{typeof(T).Name}>: [{string.Join(", ", _list)}]"; }
-            finally { _semaphore.Release(); }
-        }
-    }
+    
 }
