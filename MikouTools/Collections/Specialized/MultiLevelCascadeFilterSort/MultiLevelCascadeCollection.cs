@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
+﻿namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 {
     public class MultiLevelCascadeCollection<FilterKey, ItemValue> : MultiLevelCascadeCollectionBase<FilterKey, ItemValue, MultiLevelCascadeCollection<FilterKey, ItemValue>, MultiLevelCascadeFilteredView<FilterKey, ItemValue>> where FilterKey : notnull where ItemValue : notnull
     {
