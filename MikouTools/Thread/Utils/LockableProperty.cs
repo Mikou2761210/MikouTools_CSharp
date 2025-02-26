@@ -63,6 +63,28 @@
             readonly LockableProperty<T> _lockableProperty;
 
             /// <summary>
+            /// Gets or sets the value of the underlying LockableProperty while the lock is held.
+            /// This property ensures that the value is accessed only when the lock is not disposed.
+            /// </summary>
+            public T Value
+            {
+                get
+                {
+                    // Ensure that the lock handle has not been disposed.
+                    ObjectDisposedException.ThrowIf(_disposed, this);
+                    // Return the value from the underlying property while the lock is held.
+                    return _lockableProperty.AccessValueWhileLocked;
+                }
+                set
+                {
+                    // Ensure that the lock handle has not been disposed.
+                    ObjectDisposedException.ThrowIf(_disposed, this);
+                    // Set the value of the underlying property while the lock is held.
+                    _lockableProperty.AccessValueWhileLocked = value;
+                }
+            }
+
+            /// <summary>
             /// Initializes a new instance of LockHandle and acquires the lock on the provided LockableProperty.
             /// </summary>
             /// <param name="lockableProperty">The LockableProperty instance to lock.</param>
@@ -88,10 +110,11 @@
         }
 
         /// <summary>
-        /// Creates and returns a LockHandle that acquires the lock on this LockableProperty.
-        /// The lock is automatically released when the returned LockHandle is disposed.
+        /// Acquires the lock on this LockableProperty and returns a disposable handle that maintains the lock.
+        /// Use the returned handle to safely access or modify the property's value via its Value property.
+        /// The lock will be automatically released when the handle is disposed (for example, when used in a using statement).
         /// </summary>
-        /// <returns>A LockHandle instance representing the acquired lock.</returns>
+        /// <returns>A LockHandle instance that holds the lock on the property.</returns>
         public LockHandle LockAndGetList()
         {
             return new LockHandle(this);
