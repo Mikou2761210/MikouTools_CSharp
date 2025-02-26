@@ -14,12 +14,13 @@ namespace MikouTools.Collections.MultiLock
         }
         public override object? Dequeue()
         {
-            if (!AddLock)
+            if (!RemoveLock)
                 return base.Dequeue();
-            return null;
+            return base.Peek();
         }
+
     }
-    public class CustomQueue<T> : Queue<T>, IMultiLock
+    public class MultiLockQueue<T> : Queue<T>, IMultiLock
     {
         public virtual bool AddLock { get; set; }
         public virtual bool RemoveLock { get; set; }
@@ -28,11 +29,18 @@ namespace MikouTools.Collections.MultiLock
             if (!AddLock)
                 base.Enqueue(obj);
         }
-        public new virtual T? Dequeue()
+        public new virtual T Dequeue()
         {
-            if (!AddLock)
+            if (!RemoveLock)
                 return base.Dequeue();
-            return default(T);
+            return base.Peek();
+        }
+        public new bool? TryDequeue(out T? result)
+        {
+            result = default;
+            if (!RemoveLock)
+                return base.TryDequeue(out result);
+            return false;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MikouTools.Collections.Signaling;
 using MikouTools.Thread.Utils;
+using System.Net.Http.Headers;
 using System.Threading;
 
 namespace MikouTools.Thread.Specialized
@@ -24,7 +25,7 @@ namespace MikouTools.Thread.Specialized
         internal System.Threading.Thread thread;
 
         // A specialized queue that signals when there are items (Process tasks) to process.
-        CountSignalingQueue<Process> ProcessQueue = new CountSignalingQueue<Process>(count => count > 0);
+        readonly CountSignalingQueue<Process> ProcessQueue = new(count => count > 0);
 
         // Provides get/set access to the thread's name.
         public string? ThreadName
@@ -66,7 +67,7 @@ namespace MikouTools.Thread.Specialized
         }
 
         // Manages the current state of the ThreadManager (Idle, Running, Wait, or Dispose).
-        LockableProperty<ThreadManagerState> _threadManagerState = new LockableProperty<ThreadManagerState>(ThreadManagerState.Idle);
+        readonly LockableProperty<ThreadManagerState> _threadManagerState = new(ThreadManagerState.Idle);
         public ThreadManagerState ThreadState { get { return _threadManagerState.Value; } }
 
         /// <summary>
@@ -77,14 +78,14 @@ namespace MikouTools.Thread.Specialized
         /// <returns>An exception if one occurred during execution; otherwise, null.</returns>
         public Exception? Invoke(Action action)
         {
-            if (dispose.Value) throw new ObjectDisposedException("ThreadManager");
+            ObjectDisposedException.ThrowIf(dispose.Value, this);
 
             // If the thread is idle, start it.
             if (_threadManagerState.SetAndReturnOld(ThreadManagerState.Wait) == ThreadManagerState.Idle)
                 thread.Start();
 
             // Wrap the action in a Process.
-            Process process = new Process(action);
+            Process process = new(action);
             // Enqueue the Process for execution.
             ProcessQueue.Enqueue(process);
             // Wait for the Process to complete.
@@ -100,7 +101,7 @@ namespace MikouTools.Thread.Specialized
         /// <param name="action">The action to be executed.</param>
         public void InvokeAsync(Action action)
         {
-            if (dispose.Value) throw new ObjectDisposedException("ThreadManager");
+            ObjectDisposedException.ThrowIf(dispose.Value, this);
 
             // If the thread is idle, start it.
             if (_threadManagerState.SetAndReturnOld(ThreadManagerState.Wait) == ThreadManagerState.Idle)
@@ -111,7 +112,7 @@ namespace MikouTools.Thread.Specialized
         }
 
         // Flag indicating whether the ThreadManager has been disposed.
-        LockableProperty<bool> dispose = new LockableProperty<bool>(false);
+        readonly LockableProperty<bool> dispose = new(false);
 
         /// <summary>
         /// Disposes the ThreadManager by stopping the thread and cleaning up resources.
@@ -133,32 +134,28 @@ namespace MikouTools.Thread.Specialized
                 {
                     ProcessQueue.Dequeue().Dispose();
                 }
+                GC.SuppressFinalize(this);
             }
         }
 
         /// <summary>
         /// Private class representing a task (Process) to be executed on the thread.
         /// </summary>
-        private class Process : IDisposable
+        private class Process(Action action) : IDisposable
         {
             // The action to be executed.
-            Action _action;
+            readonly Action _action = action;
 
             // A manual reset event used to signal when the process has completed.
-            CountingManualResetEvent _manualResetEvent = new CountingManualResetEvent(false);
+            readonly CountingManualResetEvent _manualResetEvent = new(false);
 
             // Ensures that the action is only invoked once.
-            LockableProperty<bool> _invokecheck = new LockableProperty<bool>(false);
+            readonly LockableProperty<bool> _invokecheck = new(false);
 
             /// <summary>
             /// Exception captured during the action invocation, if any.
             /// </summary>
             public Exception? InvokeException { get; private set; }
-
-            public Process(Action action)
-            {
-                _action = action;
-            }
 
             /// <summary>
             /// Executes the action if it has not already been executed.
@@ -167,7 +164,7 @@ namespace MikouTools.Thread.Specialized
             /// <returns>True if the action executed successfully; otherwise, false.</returns>
             public bool Invoke()
             {
-                if (dispose.Value) throw new ObjectDisposedException("Process");
+                ObjectDisposedException.ThrowIf(dispose.Value, this);
                 bool result = false;
                 // Ensure the action is only executed once.
                 if (!_invokecheck.SetAndReturnOld(true))
@@ -206,12 +203,12 @@ namespace MikouTools.Thread.Specialized
             /// <param name="millisecondsTimeout">The maximum time to wait (in milliseconds). Pass -1 for infinite wait.</param>
             public void ProcessCompletedWait(int millisecondsTimeout)
             {
-                if (dispose.Value) throw new ObjectDisposedException("Process");
+                ObjectDisposedException.ThrowIf(dispose.Value, this);
                 _manualResetEvent.WaitOne(millisecondsTimeout);
             }
 
             // Flag indicating whether this Process has been disposed.
-            LockableProperty<bool> dispose = new LockableProperty<bool>(false);
+            readonly LockableProperty<bool> dispose = new(false);
 
             /// <summary>
             /// Disposes the process, ensuring the action has completed or the wait event is set.

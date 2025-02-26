@@ -3,23 +3,20 @@ using MikouTools.Thread.Utils;
 
 namespace MikouTools.Collections.Signaling
 {
-    public class CountSignalingQueue : MultiLockQueue
+    /// <summary>
+    /// (_WaitCondition == true)時にWaitをしない
+    /// </summary>
+    /// <param name="_WaitCondition"></param>
+    public class CountSignalingQueue(Func<int, bool>? _WaitCondition = null) : MultiLockQueue
     {
-        private readonly object _lock = new object();
-        private readonly ManualResetEvent _signal = new ManualResetEvent(false);
-        private readonly LockableProperty<bool> _wait = new LockableProperty<bool>(true);
-        public Func<int, bool> WaitCondition;
+        private readonly object _lock = new ();
+        private readonly ManualResetEvent _signal = new(false);
+        private readonly LockableProperty<bool> _wait = new (true);
+        public Func<int, bool> WaitCondition = _WaitCondition ?? (count => count > 0);
 
         public override bool AddLock { get { lock (_lock) return base.AddLock; } set { lock (_lock) base.AddLock = value; } }
         public override bool RemoveLock { get { lock (_lock) return base.RemoveLock; } set { lock (_lock) base.RemoveLock = value; } }
-        /// <summary>
-        /// (_WaitCondition == true)時にWaitをしない
-        /// </summary>
-        /// <param name="_WaitCondition"></param>
-        public CountSignalingQueue(Func<int, bool>? _WaitCondition = null)
-        {
-            WaitCondition = _WaitCondition ?? (count => count > 0);
-        }
+
         public override void Enqueue(object? item)
         {
             lock (_lock)
@@ -74,24 +71,19 @@ namespace MikouTools.Collections.Signaling
             }
         }
     }
-    public class CountSignalingQueue<T> : CustomQueue<T>
+    /// <summary>
+    /// (_WaitCondition == true)時にWaitをしない
+    /// </summary>
+    /// <param name="_WaitCondition"></param>
+    public class CountSignalingQueue<T>(Func<int, bool>? _WaitCondition = null) : MultiLockQueue<T>
     {
-        private readonly object _lock = new object();
-        private readonly ManualResetEvent _signal = new ManualResetEvent(false);
-        private readonly LockableProperty<bool> _wait = new LockableProperty<bool>(true);
-        public Func<int, bool> WaitCondition;
+        private readonly object _lock = new();
+        private readonly ManualResetEvent _signal = new (false);
+        private readonly LockableProperty<bool> _wait = new (true);
+        public Func<int, bool> WaitCondition = _WaitCondition ?? (count => count > 0);
 
         public override bool AddLock { get { lock (_lock) return base.AddLock; } set { lock (_lock) base.AddLock = value; } }
         public override bool RemoveLock { get { lock (_lock) return base.RemoveLock; } set { lock (_lock) base.RemoveLock = value; } }
-
-        /// <summary>
-        /// (_WaitCondition == true)時にWaitをしない
-        /// </summary>
-        /// <param name="_WaitCondition"></param>
-        public CountSignalingQueue(Func<int, bool>? _WaitCondition = null)
-        {
-            WaitCondition = _WaitCondition ?? (count => count > 0);
-        }
 
         public new void Enqueue(T item)
         {

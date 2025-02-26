@@ -1,13 +1,15 @@
-﻿namespace MikouTools.Collections.DirtySort
-{
+﻿using System;
 
-    public class DirtySortList<T> : List<T>, IList<T>
+namespace MikouTools.Collections.DirtySort
+{
+    public interface IDirtySortList<T> : IList<T>, IDirtySort<T>;
+
+    public class DirtySortList<T> : List<T>, IDirtySortList<T>
     {
 
-        public bool IsDirty = false;
+        public virtual bool IsDirty { get; set; } = false;
 
-        public IComparer<T>? LastComparer { get; private set; } = null;
-        public Comparison<T>? LastComparison { get; private set; } = null;
+        public virtual IComparer<T>? LastComparer { get; set; } = null;
 
 
         private void MarkDirty()
@@ -16,7 +18,7 @@
         }
 
 
-        public new T this[int index]
+        public virtual new T this[int index]
         {
             get => base[index];
             set
@@ -26,112 +28,100 @@
             }
         }
 
-        public new int Count => base.Count;
+        public virtual new int Count => base.Count;
 
-        public bool IsReadOnly => false;
+        public virtual bool IsReadOnly => false;
 
-        public new void Add(T item)
+        public virtual new void Add(T item)
         {
             base.Add(item);
             MarkDirty();
         }
 
-        public new void AddRange(IEnumerable<T> items)
+        public virtual new void AddRange(IEnumerable<T> items)
         {
             base.AddRange(items);
             MarkDirty();
         }
 
 
-        public new bool Remove(T item)
+        public virtual new bool Remove(T item)
         {
             bool removed = base.Remove(item);
             if (removed) MarkDirty();
             return removed;
         }
-        public new void RemoveRange(int index, int count)
+        public virtual new void RemoveRange(int index, int count)
         {
             base.RemoveRange(index, count);
             MarkDirty();
         }
 
-        public new void RemoveAt(int index)
+        public virtual new void RemoveAt(int index)
         {
             base.RemoveAt(index);
             MarkDirty();
         }
 
-        public new void Insert(int index, T item)
+        public virtual new void Insert(int index, T item)
         {
             base.Insert(index, item);
             MarkDirty();
         }
-        public new void InsertRange(int index, IEnumerable<T> collection)
+        public virtual new void InsertRange(int index, IEnumerable<T> collection)
         {
             base.InsertRange(index, collection);
             MarkDirty();
         }
-        public new void Reverse(int index, int count)
+        public virtual new void Reverse(int index, int count)
         {
             base.Reverse(index, count);
             MarkDirty();
         }
 
-        public new void Clear()
+        public virtual new void Clear()
         {
             base.Clear();
             MarkDirty();
         }
 
-        public new int IndexOf(T item) => base.IndexOf(item);
+        public virtual new int IndexOf(T item) => base.IndexOf(item);
 
-        public new bool Contains(T item) => base.Contains(item);
-
-
-        public new void CopyTo(T[] array, int arrayIndex) => base.CopyTo(array, arrayIndex);
-
-        public new IEnumerator<T> GetEnumerator() => base.GetEnumerator();
+        public virtual new bool Contains(T item) => base.Contains(item);
 
 
+        public virtual  new void CopyTo(T[] array, int arrayIndex) => base.CopyTo(array, arrayIndex);
+
+        public virtual new IEnumerator<T> GetEnumerator() => base.GetEnumerator();
 
 
 
 
-        public new bool Sort() => Sort(0, base.Count, null);
 
-        public new bool Sort(IComparer<T>? comparer) => Sort(0, base.Count, comparer);
 
-        public new bool Sort(int index, int count, IComparer<T>? comparer)
+        public virtual new bool Sort() => Sort(0, base.Count, null);
+
+        public virtual new bool Sort(IComparer<T>? comparer) => Sort(0, base.Count, comparer);
+
+        public virtual new bool Sort(int index, int count, IComparer<T>? comparer)
         {
-            if (IsDirty || LastComparison != null && comparer == null || comparer?.Equals(LastComparer) == false) 
+            if (IsDirty || LastComparer != comparer) 
             {
                 base.Sort(index, count, comparer);
                 LastComparer = comparer;
-                LastComparison = null;
                 IsDirty = false;
                 return true;
             }
             return false;
         }
-        public new bool Sort(Comparison<T> comparison)
+        public virtual new bool Sort(Comparison<T> comparison)
         {
-            if (IsDirty || comparison?.Equals(LastComparer) == false)
-            {
-                base.Sort(comparison);
-                LastComparer = null;
-                LastComparison = comparison;
-                IsDirty = false;
-                return true;
-            }
-            return false;
+            return Sort(Comparer<T>.Create(comparison));
         }
 
-        public bool RedoLastSort()
+        public virtual bool RedoLastSort()
         {
-            if (LastComparison == null)
-                return Sort(0, base.Count, LastComparer);
-            else
-                return Sort(LastComparison);
+            return Sort(LastComparer);
         }
 
     }

@@ -71,7 +71,7 @@
         /// <param name="key">The key of the element to add.</param>
         /// <param name="value">The value of the element to add.</param>
         /// <exception cref="ArgumentException">Thrown when the key or value already exists.</exception>
-        public new void Add(TKey key, TValue value)
+        public virtual new void Add(TKey key, TValue value)
         {
             if (base.ContainsKey(key) || _reverseDictionary.ContainsKey(value))
                 throw new ArgumentException("Item already exists in the dictionary.");
@@ -87,7 +87,7 @@
         /// <returns>The value associated with the specified key.</returns>
         /// <exception cref="KeyNotFoundException">Thrown when the key does not exist.</exception>
         /// <exception cref="ArgumentException">Thrown when setting a value that already exists in the dictionary.</exception>
-        public new TValue this[TKey key]
+        public virtual new TValue this[TKey key]
         {
             get => base[key];
             set
@@ -105,7 +105,7 @@
         /// </summary>
         /// <param name="key">The key of the element to remove.</param>
         /// <returns>true if the element is successfully removed; otherwise, false.</returns>
-        public new bool Remove(TKey key)
+        public virtual new bool Remove(TKey key)
         {
             if (base.TryGetValue(key, out TValue? value))
             {
@@ -117,7 +117,7 @@
         /// <summary>
         /// Removes all elements from the dictionary.
         /// </summary>
-        public new void Clear()
+        public virtual new void Clear()
         {
             base.Clear();
             _reverseDictionary.Clear();
@@ -129,7 +129,7 @@
         /// <param name="key">The key of the element to add.</param>
         /// <param name="value">The value of the element to add.</param>
         /// <returns>true if the element was added; otherwise, false.</returns>
-        public new bool TryAdd(TKey key, TValue value)
+        public virtual new bool TryAdd(TKey key, TValue value)
         {
             if (base.ContainsKey(key) || _reverseDictionary.ContainsKey(value)) return false;
 
@@ -145,7 +145,7 @@
         /// <param name="key">The key whose associated value is to be removed and returned.</param>
         /// <returns>The value that was removed.</returns>
         /// <exception cref="KeyNotFoundException">Thrown when the key does not exist.</exception>
-        public TValue Pop(TKey key)
+        public virtual TValue Pop(TKey key)
         {
             if (base.TryGetValue(key, out TValue? value))
             {
@@ -162,11 +162,11 @@
         /// <param name="value">The value whose associated key is to be retrieved.</param>
         /// <param name="key">When this method returns, contains the key associated with the specified value, if found; otherwise, the default value.</param>
         /// <returns>true if the key was found; otherwise, false.</returns>
-        public bool TryGetKey(TValue value, out TKey? key)
+        public virtual bool TryGetKey(TValue value, out TKey? key)
         {
             return _reverseDictionary.TryGetValue(value, out key);
         }
 
-        public new bool ContainsValue(TValue value) => _reverseDictionary.ContainsKey(value);
+        public virtual new bool ContainsValue(TValue value) => _reverseDictionary.ContainsKey(value);
     }
 }

@@ -20,7 +20,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
     /// <typeparam name="TFiltered">
     /// The type of the filtered view. This must derive from MultiLevelCascadeFilteredViewBase.
     /// </typeparam>
-    public abstract class MultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered>
+    public abstract class MultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered>: IMultiLevelCascadeCollection<FilterKey, ItemValue, TFiltered>
         where FilterKey : notnull
         where ItemValue : notnull
         where TCollection : MultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered>
