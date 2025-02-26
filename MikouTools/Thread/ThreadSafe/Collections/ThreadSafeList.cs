@@ -46,7 +46,7 @@ namespace MikouTools.Thread.ThreadSafe.Collections
             /// </summary>
             /// <param name="lock">The lock object.</param>
             /// <param name="list">The inner list.</param>
-            public LockHandle(object @lock, TListType list)
+            internal LockHandle(object @lock, TListType list)
             {
                 _lock = @lock;
                 // Acquire the lock.
@@ -250,7 +250,7 @@ namespace MikouTools.Thread.ThreadSafe.Collections
                 }
                 else
                 {
-                    result = new TValue[0];
+                    result = [];
                     return false;
                 }
             }

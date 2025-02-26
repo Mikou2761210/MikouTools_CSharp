@@ -89,7 +89,6 @@ namespace MikouTools.App.Specialized
             {
                 CurrentLanguageCode = MasterLanguageCode;
                 _currentLanguageResources = _masterLanguageResources.ToArray();
-                int i = 0;
                 foreach (string key in _keytoIndex.Keys)
                 {
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"Item[{key}]"));

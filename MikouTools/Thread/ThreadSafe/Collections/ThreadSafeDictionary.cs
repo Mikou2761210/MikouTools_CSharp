@@ -37,7 +37,7 @@ namespace MikouTools.Thread.ThreadSafe.Collections
             /// </summary>
             public TDictionaryType Dictionary { get; }
 
-            public LockHandle(object lockObj, TDictionaryType dictionary)
+            internal LockHandle(object lockObj, TDictionaryType dictionary)
             {
                 _lockObj = lockObj;
                 Monitor.Enter(_lockObj);

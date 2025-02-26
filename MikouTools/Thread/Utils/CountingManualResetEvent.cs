@@ -11,13 +11,13 @@
         }
         public new void WaitOne()
         {
-            count.Lock();
+            count.EnterLock();
             count.AccessValueWhileLocked++;
-            count.UnLock();
+            count.ExitLock();
             base.WaitOne();
-            count.Lock();
+            count.EnterLock();
             count.AccessValueWhileLocked--;
-            count.UnLock();
+            count.ExitLock();
 
         }
     }
