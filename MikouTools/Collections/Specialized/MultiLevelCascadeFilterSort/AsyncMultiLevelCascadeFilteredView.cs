@@ -87,7 +87,7 @@
             return base.Sort(comparison);
         }
 
-        public override bool AddRedoLastSort(int id)
+        internal override int AddRedoLastSort(int id)
         {
             WaitForInitialization();
             return base.AddRedoLastSort(id);

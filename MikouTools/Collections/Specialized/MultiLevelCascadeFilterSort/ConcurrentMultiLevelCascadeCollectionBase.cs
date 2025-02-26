@@ -44,7 +44,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         private int _nextId = 0;
 
         // Lock object for synchronizing access.
-        private readonly object _lock = new();
+        protected readonly object _lock = new();
 
         /// <summary>
         /// Creates a new child filtered view using an optional filter function and comparer.
@@ -99,6 +99,15 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                     _baseList[id] = value;
                 }
             }
+        }
+
+        public virtual int GetId(ItemValue item)
+        {
+            if (_baseList.TryGetKey(item, out int id))
+            {
+                return id;
+            }
+            return -1;
         }
 
         /// <summary>

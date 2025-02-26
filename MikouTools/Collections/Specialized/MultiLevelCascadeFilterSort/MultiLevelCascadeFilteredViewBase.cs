@@ -43,7 +43,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         readonly internal DirtySortList<int> _idList = [];
 
         // Dictionary that holds child filtered views associated with specific filter keys.
-        private readonly Dictionary<FilterKey, TFiltered> _children = [];
+        protected readonly Dictionary<FilterKey, TFiltered> _children = [];
 
         /// <summary>
         /// Creates a new child filtered view using an optional filter function and comparer.
@@ -131,7 +131,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// </summary>
         /// <param name="id">The unique identifier of the item to add.</param>
         /// <returns>True if the item is added; otherwise, false.</returns>
-        internal bool Add(int id)
+        internal virtual bool Add(int id)
         {
             if (FilterCheck(id))
             {
@@ -248,7 +248,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// </summary>
         /// <param name="id">The unique identifier of the item to add and sort.</param>
         /// <returns>True if the item is added and re-sorted; otherwise, false.</returns>
-        public virtual bool AddRedoLastSort(int id)
+        internal virtual int AddRedoLastSort(int id)
         {
             if (FilterCheck(id))
             {
@@ -262,9 +262,9 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                 {
                     child.Value.AddRedoLastSort(id);
                 }
-                return true;
+                return index;
             }
-            return false;
+            return -1;
         }
 
         /// <summary>

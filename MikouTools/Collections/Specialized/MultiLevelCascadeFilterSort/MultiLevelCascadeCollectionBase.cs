@@ -97,6 +97,17 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return _nextId++;
         }
 
+
+        public virtual int GetId(ItemValue item)
+        {
+            if (_baseList.TryGetKey(item, out int id))
+            {
+                return id;
+            }
+            return -1;
+        }
+
+
         /// <summary>
         /// Adds a new item to the base collection, assigns it a unique ID, and updates all child filtered views.
         /// </summary>

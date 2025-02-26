@@ -49,10 +49,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// </summary>
         bool Sort(Comparison<ItemValue> comparison);
 
-        /// <summary>
-        /// 指定したIDのアイテムを追加し、再ソートを実行します。
-        /// </summary>
-        bool AddRedoLastSort(int id);
 
         /// <summary>
         /// 最後に使用したソート方法で再ソートを実行します。
