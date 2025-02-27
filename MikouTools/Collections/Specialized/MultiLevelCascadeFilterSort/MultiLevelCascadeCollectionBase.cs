@@ -198,7 +198,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <param name="comparer">
         /// An optional comparer for sorting items within the view.
         /// </param>
-        public virtual void AddFilterView(FilterKey filterKey, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null)
+        public virtual void AddFilterView(FilterKey filterKey, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
         {
             _children.Add(filterKey, CreateChildCollection((TCollection)this, filter, comparer));
         }
@@ -214,7 +214,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <param name="comparison">
         /// An optional comparison delegate for sorting items within the view.
         /// </param>
-        public virtual void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
+        public virtual void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, Comparison<ItemValue> comparison)
         {
             _children.Add(filterName, CreateChildCollection((TCollection)this, filter, comparison));
         }

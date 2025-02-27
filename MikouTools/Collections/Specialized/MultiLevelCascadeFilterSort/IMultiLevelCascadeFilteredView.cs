@@ -73,12 +73,12 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <summary>
         /// 指定したフィルターキーで子フィルタービューを追加します。（IComparer 版）
         /// </summary>
-        void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null);
+        void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer);
 
         /// <summary>
         /// 指定したフィルターキーで子フィルタービューを追加します。（Comparison 版）
         /// </summary>
-        void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null);
+        void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter , Comparison<ItemValue> comparison);
 
         /// <summary>
         /// 指定したフィルターキーに対応する子フィルタービューを削除します。

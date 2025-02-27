@@ -453,7 +453,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <param name="filterName">The key that identifies the new filtered view.</param>
         /// <param name="filter">An optional filter function to select items.</param>
         /// <param name="comparer">An optional comparer for sorting the items in the child view.</param>
-        public virtual void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null)
+        public virtual void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
         {
             lock (_lock)
             {
@@ -467,7 +467,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <param name="filterName">The key that identifies the new filtered view.</param>
         /// <param name="filter">An optional filter function to select items.</param>
         /// <param name="comparison">An optional comparison delegate for sorting the items in the child view.</param>
-        public virtual void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
+        public virtual void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter , Comparison<ItemValue> comparison)
         {
             lock (_lock)
             {

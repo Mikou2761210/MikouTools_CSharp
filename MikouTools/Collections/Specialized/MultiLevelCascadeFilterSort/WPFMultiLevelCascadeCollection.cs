@@ -43,19 +43,19 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
         }
 
-        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null)
+        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
         {
             base.AddFilterView(filterName, filter, comparer);
         }
-        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
+        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, Comparison<ItemValue> comparison)
         {
             base.AddFilterView(filterName, filter, comparison);
         }
-        public Task AddFilterViewAsync(FilterKey filterName, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null)
+        public Task AddFilterViewAsync(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
         {
             return Task.Run(() => base.AddFilterView(filterName, filter, comparer));
         }
-        public Task AddFilterViewAsync(FilterKey filterName, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
+        public Task AddFilterViewAsync(FilterKey filterName, Func<ItemValue, bool>? filter, Comparison<ItemValue> comparison)
         {
             return Task.Run(() => base.AddFilterView(filterName, filter, comparison));
         }
