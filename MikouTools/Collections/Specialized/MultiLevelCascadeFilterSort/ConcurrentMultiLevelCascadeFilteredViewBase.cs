@@ -408,7 +408,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                     // If no filter is specified, add all items from the base that are not already in the view.
                     foreach (int addId in parentIdHashSet.Except(idHashSet))
                     {
-                        //Debug.WriteLine(addId);
                         _idList.Add(addId);
                     }
                 }
@@ -537,7 +536,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             {
                 if ((uint)_index < (uint)_idList.Count)
                 {
-                    Debug.WriteLine(_idList[_index]);
                     _current = _base[_idList[_index]];
                     _index++;
                     return true;
