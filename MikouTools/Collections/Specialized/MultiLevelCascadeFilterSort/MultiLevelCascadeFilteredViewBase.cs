@@ -112,11 +112,18 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <returns>The item corresponding to the specified index.</returns>
         public virtual ItemValue this[int index]
         {
+
             get
             {
                 if ((uint)index >= (uint)_idList.Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
                 return _base[_idList[index]];
+            }
+            set
+            {
+                if ((uint)index >= (uint)_idList.Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                _base[_idList[index]] = value;
             }
         }
 
@@ -137,6 +144,10 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             if (FilterCheck(id))
             {
                 _idList.Add(id);
+                foreach (var child in _children.Values)
+                {
+                    child.Add(id);
+                }
                 return true;
             }
             return false;
@@ -151,13 +162,25 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         internal virtual bool AddRange(IEnumerable<int> ids)
         {
             bool result = false;
-            foreach (int id in ids)
+            if(FilterFunc == null)
             {
-                if (Add(id))
+                _idList.AddRange(ids);
+                foreach (var child in _children.Values)
                 {
-                    result = true;
+                    child.AddRange(ids);
                 }
             }
+            else
+            {
+                foreach (int id in ids)
+                {
+                    if (Add(id))
+                    {
+                        result = true;
+                    }
+                }
+            }
+
             return result;
         }
 
@@ -315,7 +338,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                     _currentFilterAll = true;
                     // If no filter is specified, add all items from the base that are not already in the view.
 
-                    _idList.AddRange(parentIdHashSet.Except(idHashSet));
+                    AddRange(parentIdHashSet.Except(idHashSet));
                 }
                 else
                 {
@@ -325,13 +348,11 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                     {
                         if (idHashSet.Contains(baseId))
                         {
-                            if (!FilterFunc(_base[baseId]))
-                                _idList.Remove(baseId);
+                            Remove(baseId);
                         }
                         else
                         {
-                            if (FilterFunc(_base[baseId]))
-                                _idList.Add(baseId);
+                            Add(baseId);
                         }
                     }
                 }

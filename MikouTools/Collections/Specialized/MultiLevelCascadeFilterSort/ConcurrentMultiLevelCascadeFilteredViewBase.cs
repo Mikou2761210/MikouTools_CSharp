@@ -149,6 +149,15 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                     return _base[_idList[index]];
                 }
             }
+            set
+            {
+                lock (_lock)
+                {
+                    if ((uint)index >= (uint)_idList.Count)
+                        throw new ArgumentOutOfRangeException(nameof(index));
+                    _base[_idList[index]] = value;
+                }
+            }
         }
 
         /// <summary>
@@ -171,13 +180,23 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         {
             lock (_lock)
             {
-                if (FilterCheck(id))
-                {
-                    _idList.Add(id);
-                    return true;
-                }
-                return false;
+                return AddCore(id);
             }
+        }
+
+        private bool AddCore(int id)
+        {
+            if (FilterCheck(id))
+            {
+                _idList.Add(id);
+                foreach (var child in _children.Values)
+                {
+                    child.Add(id);
+                }
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -187,12 +206,27 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <returns>True if at least one item is added; otherwise, false.</returns>
         internal virtual bool AddRange(IEnumerable<int> ids)
         {
-            bool result = false;
             lock (_lock)
+            {
+                return AddRangeCore(ids);
+            }
+        }
+        private bool AddRangeCore(IEnumerable<int> ids)
+        {
+            bool result = false;
+            if (FilterFunc == null)
+            {
+                _idList.AddRange(ids);
+                foreach (var child in _children.Values)
+                {
+                    child.AddRange(ids);
+                }
+            }
+            else
             {
                 foreach (int id in ids)
                 {
-                    if (Add(id))
+                    if (AddCore(id))
                     {
                         result = true;
                     }
@@ -210,16 +244,21 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         {
             lock (_lock)
             {
-                if (_idList.Remove(id))
-                {
-                    foreach (var child in _children.Values)
-                    {
-                        child.Remove(id);
-                    }
-                    return true;
-                }
-                return false;
+                return RemoveCore(id);
             }
+        }
+
+        private bool RemoveCore(int id)
+        {
+            if (_idList.Remove(id))
+            {
+                foreach (var child in _children.Values)
+                {
+                    child.Remove(id);
+                }
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -407,7 +446,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                     _currentFilterAll = true;
                     // If no filter is specified, add all items from the base that are not already in the view.
 
-                    _idList.AddRange(parentIdHashSet.Except(idHashSet));
+                    AddRangeCore(parentIdHashSet.Except(idHashSet));
                 }
                 else
                 {
@@ -418,12 +457,12 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                         if (idHashSet.Contains(baseId))
                         {
                             if (!FilterFunc(_base[baseId]))
-                                _idList.Remove(baseId);
+                                RemoveCore(baseId);
                         }
                         else
                         {
                             if (FilterFunc(_base[baseId]))
-                                _idList.Add(baseId);
+                                AddCore(baseId);
                         }
                     }
                 }

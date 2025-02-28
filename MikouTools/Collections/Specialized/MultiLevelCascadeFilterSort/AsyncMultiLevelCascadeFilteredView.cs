@@ -55,6 +55,10 @@
                 WaitForInitialization();
                 return base[index];
             }
+            set
+            {
+                base[index] = value;
+            }
         }
 
         public override int IndexOf(ItemValue item)

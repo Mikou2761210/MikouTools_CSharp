@@ -22,7 +22,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <summary>
         /// インデクサで指定したインデックスのアイテムを取得します。
         /// </summary>
-        ItemValue this[int index] { get; }
+        ItemValue this[int index] { get; set; }
 
         /// <summary>
         /// ビュー内のアイテム数を取得します。

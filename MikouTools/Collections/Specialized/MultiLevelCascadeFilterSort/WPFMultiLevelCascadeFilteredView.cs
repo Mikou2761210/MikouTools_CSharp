@@ -105,6 +105,10 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                 WaitForInitialization();
                 return base[index];
             }
+            set
+            {
+                base[index] = value;
+            }
         }
 
         internal override bool Add(int id)
