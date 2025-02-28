@@ -202,12 +202,12 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return base.GetFilterView(filterName);
         }
 
-        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null)
+        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
         {
             WaitForInitialization();
             base.AddFilterView(filterName, filter, comparer);
         }
-        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
+        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, Comparison<ItemValue> comparison)
         {
             WaitForInitialization();
             base.AddFilterView(filterName, filter, comparison);

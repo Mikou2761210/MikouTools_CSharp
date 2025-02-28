@@ -1,5 +1,6 @@
 ﻿using MikouTools.Collections.DirtySort;
 using System.Collections;
+using System.Diagnostics;
 
 namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 {
@@ -291,6 +292,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 
         #region Filter Methods
 
+        private bool _currentFilterAll = false;
         /// <summary>
         /// Changes the filter function applied to this view and updates the view accordingly.
         /// Items that no longer satisfy the filter are removed, and items that now satisfy
@@ -300,26 +302,30 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <returns>True if the filter function was changed; otherwise, false.</returns>
         public virtual bool ChangeFilter(Func<ItemValue, bool>? filterFunc)
         {
-            if (FilterFunc != filterFunc)
+            if ((filterFunc == null && !_currentFilterAll) || FilterFunc != filterFunc)
             {
                 FilterFunc = filterFunc;
                 // Create a set of IDs from the base collection (or parent's filtered list if available).
-                HashSet<int> baseIdHashSet = _parent == null ? [.. _base._baseList.Keys] : [.. _parent._idList];
+                HashSet<int> parentIdHashSet = _parent == null ? [.. _base._baseList.Keys] : [.. _parent._idList];
                 // Create a set of IDs that are currently in this view.
                 HashSet<int> idHashSet = [.. _idList];
 
                 if (FilterFunc == null)
                 {
+                    _currentFilterAll = true;
+                    Debug.WriteLine($"{parentIdHashSet.Count} : {idHashSet.Count}");
                     // If no filter is specified, add all items from the base that are not already in the view.
-                    foreach (int addid in baseIdHashSet.Except(idHashSet))
+                    foreach (int addId in parentIdHashSet.Except(idHashSet))
                     {
-                        _idList.Add(addid);
+                        //Debug.WriteLine(addId);
+                        _idList.Add(addId);
                     }
                 }
                 else
                 {
+                    _currentFilterAll = false;
                     // Update the view by removing items that do not satisfy the filter and adding those that do.
-                    foreach (int baseId in baseIdHashSet)
+                    foreach (int baseId in parentIdHashSet)
                     {
                         if (idHashSet.Contains(baseId))
                         {

@@ -1,6 +1,7 @@
 ﻿using MikouTools.Collections.DirtySort;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -390,28 +391,33 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
         }
 
+        private bool _currentFilterAll = false;
         private bool ChangeFilterCore(Func<ItemValue, bool>? filterFunc)
         {
-            if (FilterFunc != filterFunc)
+            if ((filterFunc == null && !_currentFilterAll) || FilterFunc != filterFunc)
             {
                 FilterFunc = filterFunc;
                 // Create a set of IDs from the base collection (or parent's filtered list if available).
-                HashSet<int> baseIdHashSet = _parent == null ? [.. _base._baseList.Keys] : [.. _parent._idList];
+                HashSet<int> parentIdHashSet = _parent == null ? [.. _base._baseList.Keys] : [.. _parent._idList];
                 // Create a set of IDs that are currently in this view.
                 HashSet<int> idHashSet = [.. _idList];
 
                 if (FilterFunc == null)
                 {
+                    _currentFilterAll = true;
+                    Debug.WriteLine($"{parentIdHashSet.Count} : {idHashSet.Count}");
                     // If no filter is specified, add all items from the base that are not already in the view.
-                    foreach (int addId in baseIdHashSet.Except(idHashSet))
+                    foreach (int addId in parentIdHashSet.Except(idHashSet))
                     {
+                        //Debug.WriteLine(addId);
                         _idList.Add(addId);
                     }
                 }
                 else
                 {
+                    _currentFilterAll = false;
                     // Update the view by removing items that do not satisfy the filter and adding those that do.
-                    foreach (int baseId in baseIdHashSet)
+                    foreach (int baseId in parentIdHashSet)
                     {
                         if (idHashSet.Contains(baseId))
                         {
@@ -532,6 +538,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             {
                 if ((uint)_index < (uint)_idList.Count)
                 {
+                    Debug.WriteLine(_idList[_index]);
                     _current = _base[_idList[_index]];
                     _index++;
                     return true;
