@@ -252,10 +252,10 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return base.GetFilterView(filterName);
         }
 
-        public new void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
+        public new WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue> AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
         {
             WaitForInitialization();
-            base.AddFilterView(filterName, filter, comparer);
+            return base.AddFilterView(filterName, filter, comparer);
         }
 
 
