@@ -18,6 +18,12 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         where TCollection : MultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered>
         where TFiltered : MultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, TCollection, TFiltered>
     {
+        /// <summary>
+        /// An object for accessing base classes
+        /// </summary>
+        internal MultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, TCollection, TFiltered> BaseThis => this;
+
+
         // The base collection from which items are drawn.
         private readonly TCollection _base;
         // The parent filtered view (if any) for cascading filters.
@@ -197,6 +203,38 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         }
 
         /// <summary>
+        /// Inserts the item identified by its unique ID into the filtered view at the correct sorted position
+        /// using binary search based on the last used comparer. If the item does not pass the filter,
+        /// it is not inserted.
+        /// </summary>
+        /// <param name="id">The unique identifier of the item to insert.</param>
+        /// <returns>
+        /// The index at which the item was inserted if it passes the filter; otherwise, -1.
+        /// </returns>
+        internal int InsertItemInOrder(int id)
+        {
+            InitializeCheck();
+            if (FilterCheck(id))
+            {
+                // Find the correct sorted index for the new item.
+                int index = _idList.BinarySearch(id, _idList.LastComparer);
+                if (index < 0)
+                    index = ~index;
+                // Preserve the current 'dirty' state before insertion.
+                bool dirtySave = _idList.IsDirty;
+                _idList.Insert(index, id);
+                _idList.IsDirty = dirtySave;
+                // Propagate the insertion to all child filtered views.
+                foreach (var child in _children)
+                {
+                    child.Value.InsertItemInOrder(id);
+                }
+                return index;
+            }
+            return -1;
+        }
+
+        /// <summary>
         /// Removes the item with the specified ID from the filtered view.
         /// </summary>
         /// <param name="id">The unique identifier of the item to remove.</param>
@@ -248,6 +286,39 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return -1;
         }
 
+        /// <summary>
+        /// Moves an item from one index to another within the filtered view.
+        /// </summary>
+        /// <param name="fromIndex">The current index of the item to move.</param>
+        /// <param name="toIndex">The target index where the item should be placed.</param>
+        /// <returns>
+        /// The new index of the moved item if the move is performed; returns -1 if no move is needed.
+        /// </returns>
+        public int Move(int fromIndex, int toIndex)
+        {
+            InitializeCheck();
+
+            if (fromIndex < 0 || fromIndex >= _idList.Count)
+                throw new ArgumentOutOfRangeException(nameof(fromIndex), "Source index is out of range.");
+
+            if (toIndex < 0 || toIndex > _idList.Count)
+                throw new ArgumentOutOfRangeException(nameof(toIndex), "Destination index is out of range.");
+
+            if (fromIndex == toIndex)
+                return -1;
+
+            int id = _idList[fromIndex];
+            _idList.RemoveAt(fromIndex);
+
+            // If the source index was before the destination, adjust the destination index 
+            // because the list now contains one fewer element.
+            if (fromIndex < toIndex)
+                toIndex--;
+
+            _idList.Insert(toIndex, id);
+            return toIndex;
+        }
+
         #region Sorting Methods
 
         /// <summary>
@@ -283,31 +354,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <returns>True if the sort operation is successful; otherwise, false.</returns>
         public bool Sort(Comparison<ItemValue> comparison) => this.Sort(Comparer<ItemValue>.Create(comparison));
 
-        /// <summary>
-        /// Adds an item by its ID to the filtered view and re-sorts it into the correct position.
-        /// The change is also propagated to all child filtered views.
-        /// </summary>
-        /// <param name="id">The unique identifier of the item to add and sort.</param>
-        /// <returns>The index at which the item was inserted; or -1 if the item did not pass the filter.</returns>
-        internal int AddRedoLastSort(int id)
-        {
-            InitializeCheck();
-            if (FilterCheck(id))
-            {
-                int index = _idList.BinarySearch(id, _idList.LastComparer);
-                if (index < 0)
-                    index = ~index;
-                bool dirtySave = _idList.IsDirty;
-                _idList.Insert(index, id);
-                _idList.IsDirty = dirtySave;
-                foreach (var child in _children)
-                {
-                    child.Value.AddRedoLastSort(id);
-                }
-                return index;
-            }
-            return -1;
-        }
 
         /// <summary>
         /// Re-sorts the filtered view using the last used sorting logic.

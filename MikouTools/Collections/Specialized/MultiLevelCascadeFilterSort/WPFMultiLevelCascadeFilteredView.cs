@@ -54,8 +54,10 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
+        private WPFMultiLevelCascadeCollection<FilterKey, ItemValue> _base;
         internal WPFMultiLevelCascadeFilteredView(WPFMultiLevelCascadeCollection<FilterKey, ItemValue> @base, WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null) : base(@base, parent)
         {
+            _base = @base;
             base.Initialize(filter, comparer);
             _loadingWaitEvent.Set();
         }
@@ -74,6 +76,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 
         internal int NotifyChildrenOfReplace(int id, ItemValue newValue, ItemValue oldValue)
         {
+            WaitForInitialization();
             lock (_lock)
             {
                 int index = _idList.IndexOf(id);
@@ -115,21 +118,27 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
             set
             {
+                WaitForInitialization();
                 base[index] = value;
             }
         }
 
         internal new bool Add(int id)
         {
-            if (base.Add(id))
+            WaitForInitialization();
+            lock (_lock)
             {
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, base[id], base.Count - 1));
-                return true;
+                if (BaseThis.Add(id))
+                {
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, _base[id], base.Count - 1));
+                    return true;
+                }
+                return false;
             }
-            return false;
         }
         internal new bool AddRange(IEnumerable<int> ids)
         {
+            WaitForInitialization();
             if (base.AddRange(ids))
             {
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
@@ -138,22 +147,57 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return false;
         }
 
+        internal new int InsertItemInOrder(int id)
+        {
+            WaitForInitialization();
+
+            lock (_lock)
+            {
+                int index = BaseThis.InsertItemInOrder(id);
+                if (index != -1)
+                {
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, _base[id], index));
+                    return index;
+                }
+                return index;
+            }
+        }
+
         internal new bool Remove(int id)
         {
-            int index = _idList.IndexOf(id);
-            if (index != -1)
+            WaitForInitialization();
+            lock (_lock)
             {
-                base.RemoveAt(index);
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, base[id], index));
-                return true;
+                int index = _idList.IndexOf(id);
+                if (index != -1)
+                {
+                    BaseThis.RemoveAt(index);
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, _base[id], index));
+                    return true;
+                }
+                return false;
             }
-            return false;
+
         }
 
         public new int IndexOf(ItemValue item)
         {
             WaitForInitialization();
             return base.IndexOf(item);
+        }
+
+        public new int Move(int fromIndex, int toIndex)
+        {
+            WaitForInitialization();
+            lock (_lock)
+            {
+                int result = BaseThis.Move(fromIndex, toIndex);
+                if (result != -1)
+                {
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, _base[_idList[result]], fromIndex, result));
+                }
+                return result;
+            }
         }
 
 
@@ -166,17 +210,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                 return true;    
             }
             return false;
-        }
-        internal new int AddRedoLastSort(int id)
-        {
-            WaitForInitialization();
-            int index = base.AddRedoLastSort(id);
-            if (index != -1)
-            {
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                return index;
-            }
-            return index;
         }
 
         public new bool RedoLastSort()

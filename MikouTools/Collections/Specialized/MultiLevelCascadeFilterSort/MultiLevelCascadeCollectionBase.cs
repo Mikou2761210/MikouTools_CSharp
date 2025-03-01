@@ -17,6 +17,11 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         where TCollection : MultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered>
         where TFiltered : MultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, TCollection, TFiltered>
     {
+        /// <summary>
+        /// An object for accessing base classes
+        /// </summary>
+        internal TCollection BaseThis => (TCollection)this;
+
         // Dictionary that stores the base items using a unique integer key.
         internal DualKeyDictionary<int, ItemValue> _baseList;
 
@@ -153,6 +158,33 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             {
                 child.AddRange(ids);
             }
+        }
+
+        /// <summary>
+        /// Adds a new item to the base collection, assigns it a unique ID, and immediately inserts it 
+        /// into all child filtered views in sorted order based on the last used comparer.
+        /// </summary>
+        /// <param name="item">The item to add.</param>
+        /// <returns>
+        /// The unique ID assigned to the new item if addition is successful; otherwise, -1.
+        /// </returns>
+        public int InsertItemInOrder(ItemValue item)
+        {
+            int id = NewId();
+            // Attempt to add the item to the base collection.
+            if (!_baseList.TryAdd(id, item))
+            {
+                // If adding fails, push the generated ID back for reuse and return an error code.
+                _availableIds.Push(id);
+                return -1;
+            }
+            // Propagate the addition to each child filtered view so that the new item is
+            // inserted into the correct sorted position in each view.
+            foreach (var child in _children)
+            {
+                child.Value.InsertItemInOrder(id);
+            }
+            return id;
         }
 
         /// <summary>

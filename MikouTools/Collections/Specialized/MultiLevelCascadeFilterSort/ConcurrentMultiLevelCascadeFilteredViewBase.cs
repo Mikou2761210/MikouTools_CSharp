@@ -19,6 +19,8 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         where TFiltered : ConcurrentMultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, TCollection, TFiltered>
     {
         internal readonly object _lock = new();
+
+
         protected override DirtySortList<int> CreateFilteredIdList()
         {
             return new ConcurrentDirtySortList<int>();
@@ -77,6 +79,14 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
         }
 
+        internal new int InsertItemInOrder(int id)
+        {
+            lock (_lock)
+            {
+                return base.InsertItemInOrder(id);
+            }
+        }
+
         internal new virtual bool Remove(int id)
         {
             lock (_lock)
@@ -98,6 +108,14 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             lock (_lock)
             {
                 return base.IndexOf(item);
+            }
+        }
+
+        public new int Move(int fromIndex, int toIndex)
+        {
+            lock (_lock)
+            {
+                return base.Move(fromIndex, toIndex);
             }
         }
 
@@ -133,13 +151,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
         }
 
-        internal new int AddRedoLastSort(int id)
-        {
-            lock (_lock)
-            {
-                return base.AddRedoLastSort(id);
-            }
-        }
 
         public new bool RedoLastSort()
         {
