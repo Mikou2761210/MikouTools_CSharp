@@ -90,7 +90,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// Initializes the filtered view by applying an optional filter function and sorting using the provided comparer.
         /// </summary>
         /// <param name="filter">An optional filter function.</param>
-        /// <param name="comparer">An optional comparer for sorting.</param>
+        /// <param name="comparer">An optional comparer for sorting.</pa ram>
         internal virtual void Initialize(Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null)
         {
             if (!_initialize)

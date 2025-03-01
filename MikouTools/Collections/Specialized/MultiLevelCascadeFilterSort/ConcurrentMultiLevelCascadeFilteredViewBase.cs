@@ -217,10 +217,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         {
             return await Task.Run(() =>
             {
-                lock (_lock)
-                {
-                    return base.Sort(comparer);
-                }
+                return Sort(comparer);
             }).ConfigureAwait(false);
         }
 

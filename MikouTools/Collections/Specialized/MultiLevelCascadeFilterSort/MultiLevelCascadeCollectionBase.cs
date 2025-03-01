@@ -117,7 +117,11 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         public int Add(ItemValue item)
         {
             int id = NewId();
-            _baseList.Add(id, item);
+            if(!_baseList.TryAdd(id, item))
+            {
+                _availableIds.Push(id);
+                return -1;
+            }
             // Propagate the addition to each child filtered view.
             foreach (var child in _children)
             {
@@ -132,8 +136,23 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <param name="items">An enumerable collection of items to add.</param>
         public void AddRange(IEnumerable<ItemValue> items)
         {
+            List<int> ids = new(items.Count());
             foreach (ItemValue item in items)
-                Add(item);
+            {
+                int id = NewId();
+                if(_baseList.TryAdd(id, item))
+                {
+                    ids.Add(id);                
+                }
+                else
+                {
+                    _availableIds.Push(id);
+                }
+            }
+            foreach (var child in _children.Values)
+            {
+                child.AddRange(ids);
+            }
         }
 
         /// <summary>

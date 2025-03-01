@@ -38,10 +38,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
         }
 
-        public new void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
-        {
-            base.AddFilterView(filterName, filter, comparer);
-        }
 
     }
 }

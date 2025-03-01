@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -18,11 +19,25 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
         protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (!_suppressNotification)
+            if (_suppressNotification)
+                return;
+
+            // If the UI context has not been captured, call it directly.
+            if (UIContext == null || SynchronizationContext.Current == UIContext)
             {
                 CollectionChanged?.Invoke(this, e);
             }
+            else
+            {
+                // If the current thread is not a UI thread, post to the UI context.
+                UIContext.Post(_ => CollectionChanged?.Invoke(this, e), null);
+            }
         }
+
+        /// <summary>
+        /// Assign a UI thread context to update the UI after an asynchronous operation
+        /// </summary>
+        public SynchronizationContext? UIContext;
 
 
         /// <summary>
@@ -179,7 +194,12 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         public new bool RedoLastSortRecursively()
         {
             WaitForInitialization();
-            return base.RedoLastSortRecursively();
+            if (base.RedoLastSortRecursively())
+            {
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                return true;
+            }
+            return false;
         }
 
         public new bool ChangeFilter(Func<ItemValue, bool>? filterFunc)
@@ -217,7 +237,12 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         public new async Task<bool> ChangeFilterAsync(Func<ItemValue, bool>? filterFunc)
         {
             WaitForInitialization();
-            return await base.ChangeFilterAsync(filterFunc);
+            return await Task.Run(() =>
+            {
+                bool result = base.ChangeFilter(filterFunc);
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                return result;
+            }).ConfigureAwait(false);
         }
         public new async Task<WPFMultiLevelCascadeFilteredView<FilterKey,ItemValue>> AddFilterViewAsync(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
         {
@@ -228,7 +253,12 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         public new async Task<bool> SortAsync(IComparer<ItemValue>? comparer)
         {
             WaitForInitialization();
-            return await base.SortAsync(comparer);
+            return await Task<bool>.Run(() =>
+            {
+                bool result = base.Sort(comparer);
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                return result;
+            }).ConfigureAwait(false);
         }
 
         #endregion
