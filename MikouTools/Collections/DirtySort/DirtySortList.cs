@@ -62,6 +62,13 @@ namespace MikouTools.Collections.DirtySort
             base.RemoveAt(index);
             MarkDirty();
         }
+        public virtual T PopAt(int index)
+        {
+            T result = base[index];
+            base.Remove(result);
+            MarkDirty();
+            return result;
+        }
 
         public virtual new void Insert(int index, T item)
         {

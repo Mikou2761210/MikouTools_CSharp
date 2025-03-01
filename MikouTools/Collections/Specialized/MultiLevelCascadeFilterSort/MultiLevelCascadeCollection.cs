@@ -7,10 +7,5 @@
         {
             return new MultiLevelCascadeFilteredView<FilterKey, ItemValue>(this, null, filter, comparer);
         }
-
-        protected override MultiLevelCascadeFilteredView<FilterKey, ItemValue> CreateChildCollection(MultiLevelCascadeCollection<FilterKey, ItemValue> @base, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
-        {
-            return new MultiLevelCascadeFilteredView<FilterKey, ItemValue>(this, null, filter, comparison);
-        }
     }
 }

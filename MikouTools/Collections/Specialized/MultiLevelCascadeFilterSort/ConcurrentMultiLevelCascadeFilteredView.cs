@@ -10,19 +10,10 @@
             return new ConcurrentMultiLevelCascadeFilteredView<FilterKey, ItemValue>(@base, parent, filter, comparer);
         }
 
-        protected override ConcurrentMultiLevelCascadeFilteredView<FilterKey, ItemValue> CreateChildCollection(ConcurrentMultiLevelCascadeCollection<FilterKey, ItemValue> @base, ConcurrentMultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
+
+        internal ConcurrentMultiLevelCascadeFilteredView(ConcurrentMultiLevelCascadeCollection<FilterKey, ItemValue> @base, ConcurrentMultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null) : base(@base, parent)
         {
-            return new ConcurrentMultiLevelCascadeFilteredView<FilterKey, ItemValue>(@base, parent, filter, comparison);
-        }
-
-
-        internal ConcurrentMultiLevelCascadeFilteredView(ConcurrentMultiLevelCascadeCollection<FilterKey, ItemValue> @base, ConcurrentMultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null) : base(@base, parent, filter, comparer)
-        {
-
-        }
-        internal ConcurrentMultiLevelCascadeFilteredView(ConcurrentMultiLevelCascadeCollection<FilterKey, ItemValue> @base, ConcurrentMultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null) : base(@base, parent, filter, comparison)
-        {
-
+            base.Initialize(filter, comparer);
         }
     }
 }

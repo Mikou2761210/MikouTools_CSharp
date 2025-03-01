@@ -99,6 +99,14 @@ namespace MikouTools.Collections.DirtySort
             }
         }
 
+        public virtual T PopAt(int index)
+        {
+            T result = base[index];
+            base.Remove(result);
+            MarkDirty();
+            return result;
+        }
+
         public override void Insert(int index, T item)
         {
             lock (_lockObj)

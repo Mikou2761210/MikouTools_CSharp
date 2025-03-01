@@ -15,13 +15,8 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return new WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>(this, null, filter, comparer);
         }
 
-        protected override WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue> CreateChildCollection(WPFMultiLevelCascadeCollection<FilterKey, ItemValue> @base, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
-        {
-            return new WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>(this, null, filter, comparison);
-        }
 
-
-        public override ItemValue this[int id]
+        public new ItemValue this[int id]
         {
             get
             {
@@ -43,21 +38,10 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
         }
 
-        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
+        public new void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
         {
             base.AddFilterView(filterName, filter, comparer);
         }
-        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, Comparison<ItemValue> comparison)
-        {
-            base.AddFilterView(filterName, filter, comparison);
-        }
-        public Task AddFilterViewAsync(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
-        {
-            return Task.Run(() => base.AddFilterView(filterName, filter, comparer));
-        }
-        public Task AddFilterViewAsync(FilterKey filterName, Func<ItemValue, bool>? filter, Comparison<ItemValue> comparison)
-        {
-            return Task.Run(() => base.AddFilterView(filterName, filter, comparison));
-        }
+
     }
 }

@@ -39,12 +39,9 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
-        internal WPFMultiLevelCascadeFilteredView(WPFMultiLevelCascadeCollection<FilterKey, ItemValue> @base, WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null) : base(@base, parent, filter, comparer)
+        internal WPFMultiLevelCascadeFilteredView(WPFMultiLevelCascadeCollection<FilterKey, ItemValue> @base, WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null) : base(@base, parent)
         {
-            _loadingWaitEvent.Set();
-        }
-        internal WPFMultiLevelCascadeFilteredView(WPFMultiLevelCascadeCollection<FilterKey, ItemValue> @base, WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null) : base(@base, parent, filter, comparison)
-        {
+            base.Initialize(filter, comparer);
             _loadingWaitEvent.Set();
         }
 
@@ -59,10 +56,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return new WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>(@base, parent, filter, comparer);
         }
 
-        protected override WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue> CreateChildCollection(WPFMultiLevelCascadeCollection<FilterKey, ItemValue> @base, WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
-        {
-            return new WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>(@base, parent, filter, comparison);
-        }
 
         internal int NotifyChildrenOfReplace(int id, ItemValue newValue, ItemValue oldValue)
         {
@@ -83,13 +76,13 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
         }
 
-        public override IEnumerator<ItemValue> GetEnumerator()
+        public new IEnumerator<ItemValue> GetEnumerator()
         {
             WaitForInitialization();
             return base.GetEnumerator();
         }
 
-        public override int Count
+        public new int Count
         {
             get
             {
@@ -98,7 +91,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
         }
 
-        public override ItemValue this[int index]
+        public new ItemValue this[int index]
         {
             get
             {
@@ -111,7 +104,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
         }
 
-        internal override bool Add(int id)
+        internal new bool Add(int id)
         {
             if (base.Add(id))
             {
@@ -120,7 +113,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
             return false;
         }
-        internal override bool AddRange(IEnumerable<int> ids)
+        internal new bool AddRange(IEnumerable<int> ids)
         {
             if (base.AddRange(ids))
             {
@@ -130,7 +123,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return false;
         }
 
-        internal override bool Remove(int id)
+        internal new bool Remove(int id)
         {
             int index = _idList.IndexOf(id);
             if (index != -1)
@@ -142,14 +135,14 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return false;
         }
 
-        public override int IndexOf(ItemValue item)
+        public new int IndexOf(ItemValue item)
         {
             WaitForInitialization();
             return base.IndexOf(item);
         }
 
 
-        public override bool Sort(int index, int count, IComparer<ItemValue>? comparer)
+        public new bool Sort(int index, int count, IComparer<ItemValue>? comparer)
         {
             WaitForInitialization();
             if(base.Sort(index, count, comparer))
@@ -159,7 +152,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
             return false;
         }
-        internal override int AddRedoLastSort(int id)
+        internal new int AddRedoLastSort(int id)
         {
             WaitForInitialization();
             int index = base.AddRedoLastSort(id);
@@ -171,7 +164,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return index;
         }
 
-        public override bool RedoLastSort()
+        public new bool RedoLastSort()
         {
             WaitForInitialization();
 
@@ -183,13 +176,13 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return false;
         }
 
-        public override bool RedoLastSortRecursively()
+        public new bool RedoLastSortRecursively()
         {
             WaitForInitialization();
             return base.RedoLastSortRecursively();
         }
 
-        public override bool ChangeFilter(Func<ItemValue, bool>? filterFunc)
+        public new bool ChangeFilter(Func<ItemValue, bool>? filterFunc)
         {
             WaitForInitialization();
             if (base.ChangeFilter(filterFunc))
@@ -200,39 +193,45 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return false;
         }
 
-        public override WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>? GetFilterView(FilterKey filterName)
+        public new WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>? GetFilterView(FilterKey filterName)
         {
             WaitForInitialization();
             return base.GetFilterView(filterName);
         }
 
-        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
+        public new void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
         {
             WaitForInitialization();
             base.AddFilterView(filterName, filter, comparer);
         }
-        public override void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, Comparison<ItemValue> comparison)
-        {
-            WaitForInitialization();
-            base.AddFilterView(filterName, filter, comparison);
-        }
-        public Task AddFilterViewAsync(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
-        {
-            WaitForInitialization();
-            return Task.Run(() => base.AddFilterView(filterName, filter, comparer));
-        }
-        public Task AddFilterViewAsync(FilterKey filterName, Func<ItemValue, bool>? filter , Comparison<ItemValue> comparison)
-        {
-            WaitForInitialization();
-            return Task.Run(() => base.AddFilterView(filterName, filter, comparison));
-        }
 
-        public override void RemoveFilterView(FilterKey filterName)
+
+        public new void RemoveFilterView(FilterKey filterName)
         {
             WaitForInitialization();
             base.RemoveFilterView(filterName);
         }
 
+        #region Async
+
+        public new async Task<bool> ChangeFilterAsync(Func<ItemValue, bool>? filterFunc)
+        {
+            WaitForInitialization();
+            return await base.ChangeFilterAsync(filterFunc);
+        }
+        public new async Task<WPFMultiLevelCascadeFilteredView<FilterKey,ItemValue>> AddFilterViewAsync(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
+        {
+            WaitForInitialization();
+            return await base.AddFilterViewAsync(filterName, filter, comparer);
+        }
+
+        public new async Task<bool> SortAsync(IComparer<ItemValue>? comparer)
+        {
+            WaitForInitialization();
+            return await base.SortAsync(comparer);
+        }
+
+        #endregion
 
     }
 }

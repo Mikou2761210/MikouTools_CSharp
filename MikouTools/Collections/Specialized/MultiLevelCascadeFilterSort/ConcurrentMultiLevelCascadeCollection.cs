@@ -7,10 +7,5 @@
         {
             return new ConcurrentMultiLevelCascadeFilteredView<FilterKey, ItemValue>(this, null, filter, comparer);
         }
-
-        protected override ConcurrentMultiLevelCascadeFilteredView<FilterKey, ItemValue> CreateChildCollection(ConcurrentMultiLevelCascadeCollection<FilterKey, ItemValue> @base, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
-        {
-            return new ConcurrentMultiLevelCascadeFilteredView<FilterKey, ItemValue>(this, null, filter, comparison);
-        }
     }
 }

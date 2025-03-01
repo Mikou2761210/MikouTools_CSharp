@@ -1,4 +1,6 @@
-﻿namespace MikouTools.Collections.Optimized
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace MikouTools.Collections.Optimized
 {
     /// <summary>
     /// A dictionary that provides fast bidirectional lookup while ensuring both keys and values are unique.
@@ -156,13 +158,25 @@
             throw new KeyNotFoundException();
         }
 
+        public virtual bool TryPop(TKey key, [MaybeNullWhen(false)] out TValue? result)
+        {
+            if (base.TryGetValue(key, out result))
+            {
+                base.Remove(key);
+                _reverseDictionary.Remove(result);
+                return true;
+            }
+            return false;
+        }
+
+
         /// <summary>
         /// Tries to get the key associated with the specified value.
         /// </summary>
         /// <param name="value">The value whose associated key is to be retrieved.</param>
         /// <param name="key">When this method returns, contains the key associated with the specified value, if found; otherwise, the default value.</param>
         /// <returns>true if the key was found; otherwise, false.</returns>
-        public virtual bool TryGetKey(TValue value, out TKey? key)
+        public virtual bool TryGetKey(TValue value, [MaybeNullWhen(false)] out TKey? key)
         {
             return _reverseDictionary.TryGetValue(value, out key);
         }

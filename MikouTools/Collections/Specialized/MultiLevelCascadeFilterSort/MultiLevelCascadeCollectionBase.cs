@@ -1,42 +1,55 @@
-﻿using MikouTools.Collections.Optimized;
+﻿using MikouTools.Collections.DirtySort;
+using MikouTools.Collections.Optimized;
 
 namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 {
     /// <summary>
-    /// Represents a base collection that supports multi-level cascade filtering.
-    /// This abstract class provides the foundation for collections that maintain a base list of items 
-    /// and allow multiple filtered views to be created and maintained. Filtered views automatically 
-    /// update when items are added or removed from the base collection.
+    /// Base class for a multi-level cascade collection that stores items with unique integer IDs
+    /// and supports child filtered views.
     /// </summary>
-    /// <typeparam name="FilterKey">
-    /// The type used for the key that identifies each filter view.
-    /// </typeparam>
-    /// <typeparam name="ItemValue">
-    /// The type of items stored in the collection.
-    /// </typeparam>
-    /// <typeparam name="TCollection">
-    /// The type of the collection itself. This must derive from MultiLevelCascadeCollectionBase.
-    /// </typeparam>
-    /// <typeparam name="TFiltered">
-    /// The type of the filtered view. This must derive from MultiLevelCascadeFilteredViewBase.
-    /// </typeparam>
-    public abstract class MultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered>: IMultiLevelCascadeCollection<FilterKey, ItemValue, TFiltered>
+    /// <typeparam name="FilterKey">Type used as a key for filtering views (must be non-null).</typeparam>
+    /// <typeparam name="ItemValue">Type of the items stored in the collection (must be non-null).</typeparam>
+    /// <typeparam name="TCollection">The concrete type of the multi-level cascade collection.</typeparam>
+    /// <typeparam name="TFiltered">The concrete type of the filtered view.</typeparam>
+    public abstract class MultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered>
         where FilterKey : notnull
         where ItemValue : notnull
         where TCollection : MultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered>
         where TFiltered : MultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, TCollection, TFiltered>
     {
-        // Dictionary storing the base items, using an integer key.
-        internal DualKeyDictionary<int, ItemValue> _baseList = [];
+        // Dictionary that stores the base items using a unique integer key.
+        internal DualKeyDictionary<int, ItemValue> _baseList;
 
         // Dictionary that holds the child filtered views associated with filter keys.
-        protected readonly Dictionary<FilterKey, TFiltered> _children = [];
+        protected readonly Dictionary<FilterKey, TFiltered> _children;
+
+        /// <summary>
+        /// Factory method for creating the base item dictionary.
+        /// </summary>
+        protected virtual DualKeyDictionary<int, ItemValue> CreateBaseItemDictionary()
+        {
+            return [];
+        }
+
+        /// <summary>
+        /// Factory method for creating the collection of child filtered views.
+        /// </summary>
+        protected virtual Dictionary<FilterKey, TFiltered> CreateChildViews()
+        {
+            return [];
+        }
 
         // Stack of available (reusable) IDs.
         private readonly Stack<int> _availableIds = [];
 
         // The next unique ID to assign when no reusable IDs are available.
         private int _nextId = 0;
+
+        public MultiLevelCascadeCollectionBase()
+        {
+            _baseList = CreateBaseItemDictionary();
+            _children = CreateChildViews();
+        }
 
         /// <summary>
         /// Creates a new child filtered view with an optional filter function and comparer.
@@ -48,44 +61,29 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         protected abstract TFiltered CreateChildCollection(TCollection @base, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null);
 
         /// <summary>
-        /// Creates a new child filtered view with an optional filter function and a comparison delegate.
-        /// </summary>
-        /// <param name="base">The base collection instance.</param>
-        /// <param name="filter">An optional filter function to determine which items are included in the view.</param>
-        /// <param name="comparison">An optional comparison delegate for sorting items within the view.</param>
-        /// <returns>A new filtered view instance.</returns>
-        protected abstract TFiltered CreateChildCollection(TCollection @base, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null);
-
-        /// <summary>
         /// Gets all the unique integer IDs of the items in the base collection.
         /// </summary>
-        public virtual IEnumerable<int> GetIDs() => _baseList.Keys;
+        public IEnumerable<int> GetIDs() => _baseList.Keys;
 
         /// <summary>
         /// Gets all the item values stored in the base collection.
         /// </summary>
-        public virtual IEnumerable<ItemValue> GetValues() => _baseList.Values;
+        public IEnumerable<ItemValue> GetValues() => _baseList.Values;
 
         /// <summary>
-        /// Gets or sets the item at the specified ID in the collection.
+        /// Gets or sets the item at the specified unique ID in the collection.
         /// </summary>
         /// <param name="id">The unique identifier of the item.</param>
         /// <returns>The item corresponding to the specified ID.</returns>
-        public virtual ItemValue this[int id]
+        public ItemValue this[int id]
         {
-            get
-            {
-                return _baseList[id];
-            }
-            set
-            {
-                _baseList[id] = value;
-            }
+            get => _baseList[id];
+            set => _baseList[id] = value;
         }
 
         /// <summary>
-        /// Generates a new unique ID for an item. If there are any available reusable IDs, it reuses one.
-        /// Otherwise, it returns a new ID.
+        /// Generates a new unique ID for an item. Reuses an available ID if one exists;
+        /// otherwise, returns a new unique ID.
         /// </summary>
         /// <returns>A unique integer ID.</returns>
         private int NewId()
@@ -97,8 +95,12 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return _nextId++;
         }
 
-
-        public virtual int GetId(ItemValue item)
+        /// <summary>
+        /// Retrieves the unique ID assigned to the specified item.
+        /// </summary>
+        /// <param name="item">The item whose ID is requested.</param>
+        /// <returns>The unique ID if found; otherwise, -1.</returns>
+        public int GetId(ItemValue item)
         {
             if (_baseList.TryGetKey(item, out int id))
             {
@@ -107,13 +109,12 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return -1;
         }
 
-
         /// <summary>
         /// Adds a new item to the base collection, assigns it a unique ID, and updates all child filtered views.
         /// </summary>
         /// <param name="item">The item to add.</param>
         /// <returns>The unique ID assigned to the new item.</returns>
-        public virtual int Add(ItemValue item)
+        public int Add(ItemValue item)
         {
             int id = NewId();
             _baseList.Add(id, item);
@@ -129,7 +130,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// Adds a range of items to the base collection.
         /// </summary>
         /// <param name="items">An enumerable collection of items to add.</param>
-        public virtual void AddRange(IEnumerable<ItemValue> items)
+        public void AddRange(IEnumerable<ItemValue> items)
         {
             foreach (ItemValue item in items)
                 Add(item);
@@ -140,7 +141,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// </summary>
         /// <param name="item">The item to remove.</param>
         /// <returns>True if the item was successfully removed; otherwise, false.</returns>
-        public virtual bool Remove(ItemValue item)
+        public bool Remove(ItemValue item)
         {
             if (_baseList.TryGetKey(item, out int id))
             {
@@ -150,13 +151,13 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         }
 
         /// <summary>
-        /// Removes an item from the base collection by its unique ID. 
-        /// The removed ID is pushed back into the available pool for reuse, 
+        /// Removes an item from the base collection by its unique ID.
+        /// The removed ID is pushed back into the available pool for reuse,
         /// and the removal is propagated to all child filtered views.
         /// </summary>
         /// <param name="id">The unique ID of the item to remove.</param>
         /// <returns>True if the item was successfully removed; otherwise, false.</returns>
-        public virtual bool RemoveId(int id)
+        public bool RemoveId(int id)
         {
             if (_baseList.Remove(id))
             {
@@ -176,13 +177,11 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <summary>
         /// Retrieves the filtered view associated with the specified filter key.
         /// </summary>
-        /// <param name="Key">The key identifying the filter view.</param>
-        /// <returns>
-        /// The filtered view if it exists; otherwise, null.
-        /// </returns>
-        public virtual TFiltered? GetFilterView(FilterKey Key)
+        /// <param name="filterKey">The key identifying the filter view.</param>
+        /// <returns>The filtered view if it exists; otherwise, null.</returns>
+        public TFiltered? GetFilterView(FilterKey filterKey)
         {
-            if (_children.TryGetValue(Key, out TFiltered? value))
+            if (_children.TryGetValue(filterKey, out TFiltered? value))
                 return value;
             return null;
         }
@@ -192,43 +191,28 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// The new view is created by calling the abstract CreateChildCollection method.
         /// </summary>
         /// <param name="filterKey">The key identifying the new filter view.</param>
-        /// <param name="filter">
-        /// An optional filter function to determine which items are included in the view.
-        /// </param>
-        /// <param name="comparer">
-        /// An optional comparer for sorting items within the view.
-        /// </param>
-        public virtual void AddFilterView(FilterKey filterKey, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
+        /// <param name="filter">An optional filter function to determine which items are included in the view.</param>
+        /// <param name="comparer">An optional comparer for sorting items within the view.</param>
+        /// <returns>The newly created child filtered view.</returns>
+        public TFiltered AddFilterView(FilterKey filterKey, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
         {
-            _children.Add(filterKey, CreateChildCollection((TCollection)this, filter, comparer));
-        }
-
-        /// <summary>
-        /// Adds a new filter view to the collection using a filter function and an optional comparison delegate.
-        /// The new view is created by calling the abstract CreateChildCollection method.
-        /// </summary>
-        /// <param name="filterName">The key identifying the new filter view.</param>
-        /// <param name="filter">
-        /// An optional filter function to determine which items are included in the view.
-        /// </param>
-        /// <param name="comparison">
-        /// An optional comparison delegate for sorting items within the view.
-        /// </param>
-        public virtual void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, Comparison<ItemValue> comparison)
-        {
-            _children.Add(filterName, CreateChildCollection((TCollection)this, filter, comparison));
+            TFiltered newFilter = CreateChildCollection((TCollection)this, filter, comparer);
+            _children.Add(filterKey, newFilter);
+            return newFilter;
         }
 
         /// <summary>
         /// Removes the filter view associated with the specified filter key.
         /// </summary>
-        /// <param name="Key">The key identifying the filter view to remove.</param>
-        public virtual void RemoveFilterView(FilterKey Key)
+        /// <param name="filterKey">The key identifying the filter view to remove.</param>
+        /// <returns>True if the item was successfully removed; otherwise, false.</returns>
+        public bool RemoveFilterView(FilterKey filterKey)
         {
-            _children.Remove(Key);
-        }
+            return _children.Remove(filterKey);
+        } 
 
         #endregion Filter Methods
     }
+
 }
 

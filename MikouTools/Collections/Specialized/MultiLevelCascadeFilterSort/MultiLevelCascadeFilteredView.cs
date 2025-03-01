@@ -10,19 +10,10 @@
             return new MultiLevelCascadeFilteredView<FilterKey, ItemValue>(@base, parent, filter, comparer);
         }
 
-        protected override MultiLevelCascadeFilteredView<FilterKey, ItemValue> CreateChildCollection(MultiLevelCascadeCollection<FilterKey, ItemValue> @base, MultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
+
+        internal MultiLevelCascadeFilteredView(MultiLevelCascadeCollection<FilterKey, ItemValue> @base, MultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null) : base(@base, parent)
         {
-            return new MultiLevelCascadeFilteredView<FilterKey, ItemValue>(@base, parent, filter, comparison);
-        }
-
-
-        internal MultiLevelCascadeFilteredView(MultiLevelCascadeCollection<FilterKey, ItemValue> @base, MultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null) : base(@base, parent, filter, comparer)
-        {
-
-        }
-        internal MultiLevelCascadeFilteredView(MultiLevelCascadeCollection<FilterKey, ItemValue> @base, MultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null) : base(@base, parent, filter, comparison)
-        {
-
+            base.Initialize(filter, comparer);
         }
     }
 }

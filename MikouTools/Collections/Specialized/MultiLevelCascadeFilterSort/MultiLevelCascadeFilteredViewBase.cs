@@ -5,24 +5,14 @@ using System.Diagnostics;
 namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 {
     /// <summary>
-    /// Represents a base filtered view that supports multi-level cascade filtering and sorting.
-    /// This abstract class manages a view of items filtered from a base collection and supports cascading
-    /// filters as well as propagating sorting changes. It implements <see cref="IEnumerable{ItemValue}"/>
-    /// to allow iteration over the filtered items.
+    /// Base class for a filtered view in a multi-level cascade collection.
+    /// This class provides filtering, sorting, and child view management functionality.
     /// </summary>
-    /// <typeparam name="FilterKey">
-    /// The type used as a key for identifying filter views.
-    /// </typeparam>
-    /// <typeparam name="ItemValue">
-    /// The type of items contained in the collection.
-    /// </typeparam>
-    /// <typeparam name="TCollection">
-    /// The type of the base collection. Must derive from <see cref="MultiLevelCascadeCollectionBase{FilterKey, ItemValue, TCollection, TFiltered}"/>.
-    /// </typeparam>
-    /// <typeparam name="TFiltered">
-    /// The type of the filtered view. Must derive from <see cref="MultiLevelCascadeFilteredViewBase{FilterKey, ItemValue, TCollection, TFiltered}"/>.
-    /// </typeparam>
-    public abstract partial class MultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, TCollection, TFiltered> : IMultiLevelCascadeFilteredView<FilterKey, ItemValue, TFiltered>, IEnumerable<ItemValue>
+    /// <typeparam name="FilterKey">Type used as a key for filtering views (must be non-null).</typeparam>
+    /// <typeparam name="ItemValue">Type of the items stored (must be non-null).</typeparam>
+    /// <typeparam name="TCollection">The concrete type of the base collection.</typeparam>
+    /// <typeparam name="TFiltered">The concrete type of the filtered view.</typeparam>
+    public abstract class MultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, TCollection, TFiltered> : IEnumerable<ItemValue>, IEnumerable
         where FilterKey : notnull
         where ItemValue : notnull
         where TCollection : MultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered>
@@ -34,6 +24,22 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         private readonly TFiltered? _parent;
 
         /// <summary>
+        /// Factory method for creating the filtered ID list.
+        /// </summary>
+        protected virtual DirtySortList<int> CreateFilteredIdList()
+        {
+            return [];
+        }
+
+        /// <summary>
+        /// Factory method for creating the collection of child filtered views.
+        /// </summary>
+        protected virtual Dictionary<FilterKey, TFiltered> CreateChildViews()
+        {
+            return [];
+        }
+
+        /// <summary>
         /// Gets the filter function used to determine which items are included in this view.
         /// If null, no filtering is applied.
         /// </summary>
@@ -41,10 +47,10 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 
         // List of item IDs included in this filtered view.
         // Note: The initializer "[]" is a placeholder and should be replaced with an actual collection initializer (e.g., new DirtySortList<int>()).
-        readonly internal DirtySortList<int> _idList = [];
+        protected readonly DirtySortList<int> _idList;
 
         // Dictionary that holds child filtered views associated with specific filter keys.
-        protected readonly Dictionary<FilterKey, TFiltered> _children = [];
+        protected readonly Dictionary<FilterKey, TFiltered> _children;
 
         /// <summary>
         /// Creates a new child filtered view using an optional filter function and comparer.
@@ -57,70 +63,75 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         protected abstract TFiltered CreateChildCollection(TCollection @base, TFiltered? parent = null, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null);
 
         /// <summary>
-        /// Creates a new child filtered view using an optional filter function and a comparison delegate.
-        /// </summary>
-        /// <param name="base">The base collection instance.</param>
-        /// <param name="parent">The parent filtered view (if any).</param>
-        /// <param name="filter">An optional filter function to select items.</param>
-        /// <param name="comparison">An optional comparison delegate for sorting the items.</param>
-        /// <returns>A new instance of a filtered view.</returns>
-        protected abstract TFiltered CreateChildCollection(TCollection @base, TFiltered? parent = null, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null);
-
-        /// <summary>
         /// Returns an enumerator that iterates through the filtered items.
         /// </summary>
         /// <returns>An enumerator for the filtered items.</returns>
-        public virtual IEnumerator<ItemValue> GetEnumerator() => new FilterEnumerator(_base, _idList);
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => new FilterEnumerator(_base, _idList);
+        public IEnumerator<ItemValue> GetEnumerator() => new FilterEnumerator(_base, _idList);
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
         /// Gets the number of items in the filtered view.
         /// </summary>
-        public virtual int Count => _idList.Count;
+        public int Count => _idList.Count;
+
+        // Indicates whether the view has been initialized.
+        bool _initialize = false;
 
         /// <summary>
-        /// Initializes a new instance of the filtered view with an optional filter and comparer.
+        /// Checks whether the view has been initialized; if not, throws an exception.
+        /// </summary>
+        private void InitializeCheck()
+        {
+            if (!_initialize)
+                throw new Exception("Not initialized");
+        }
+
+        /// <summary>
+        /// Initializes the filtered view by applying an optional filter function and sorting using the provided comparer.
+        /// </summary>
+        /// <param name="filter">An optional filter function.</param>
+        /// <param name="comparer">An optional comparer for sorting.</param>
+        internal virtual void Initialize(Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null)
+        {
+            if (!_initialize)
+            {
+                _initialize = true;
+                ChangeFilter(filter);
+                Sort(comparer);
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the filtered view with an optional parent view.
         /// </summary>
         /// <param name="base">The base collection instance.</param>
         /// <param name="parent">The parent filtered view (if any).</param>
-        /// <param name="filter">An optional filter function to select items.</param>
-        /// <param name="comparer">An optional comparer for sorting the items.</param>
-        internal MultiLevelCascadeFilteredViewBase(TCollection @base, TFiltered? parent = null, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null)
+        internal MultiLevelCascadeFilteredViewBase(TCollection @base, TFiltered? parent = null)
         {
             _base = @base;
             _parent = parent;
-            ChangeFilter(filter);
-            Sort(comparer);
+
+            _idList = CreateFilteredIdList();
+            _children = CreateChildViews();
         }
 
         /// <summary>
-        /// Initializes a new instance of the filtered view with an optional filter and comparison delegate.
-        /// </summary>
-        /// <param name="base">The base collection instance.</param>
-        /// <param name="parent">The parent filtered view (if any).</param>
-        /// <param name="filter">An optional filter function to select items.</param>
-        /// <param name="comparison">An optional comparison delegate for sorting the items.</param>
-        internal MultiLevelCascadeFilteredViewBase(TCollection @base, TFiltered? parent = null, Func<ItemValue, bool>? filter = null, Comparison<ItemValue>? comparison = null)
-            : this(@base, parent, filter, comparison != null ? Comparer<ItemValue>.Create(comparison) : null)
-        {
-        }
-
-        /// <summary>
-        /// Gets the item at the specified index in the filtered view.
+        /// Gets or sets the item at the specified index in the filtered view.
         /// </summary>
         /// <param name="index">The zero-based index in the filtered view.</param>
         /// <returns>The item corresponding to the specified index.</returns>
         public virtual ItemValue this[int index]
         {
-
             get
             {
+                InitializeCheck();
                 if ((uint)index >= (uint)_idList.Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
                 return _base[_idList[index]];
             }
             set
             {
+                InitializeCheck();
                 if ((uint)index >= (uint)_idList.Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
                 _base[_idList[index]] = value;
@@ -136,11 +147,13 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 
         /// <summary>
         /// Attempts to add an item by its ID to the filtered view.
+        /// If the item passes the filter, it is added and the change is propagated to child views.
         /// </summary>
         /// <param name="id">The unique identifier of the item to add.</param>
         /// <returns>True if the item is added; otherwise, false.</returns>
         internal virtual bool Add(int id)
         {
+            InitializeCheck();
             if (FilterCheck(id))
             {
                 _idList.Add(id);
@@ -153,7 +166,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return false;
         }
 
-
         /// <summary>
         /// Adds a range of item IDs to the filtered view.
         /// </summary>
@@ -161,8 +173,9 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <returns>True if at least one item is added; otherwise, false.</returns>
         internal virtual bool AddRange(IEnumerable<int> ids)
         {
+            InitializeCheck();
             bool result = false;
-            if(FilterFunc == null)
+            if (FilterFunc == null)
             {
                 _idList.AddRange(ids);
                 foreach (var child in _children.Values)
@@ -180,7 +193,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                     }
                 }
             }
-
             return result;
         }
 
@@ -191,6 +203,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <returns>True if the item is removed; otherwise, false.</returns>
         internal virtual bool Remove(int id)
         {
+            InitializeCheck();
             if (_idList.Remove(id))
             {
                 foreach (var child in _children)
@@ -208,6 +221,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <param name="index">The zero-based index of the item to remove.</param>
         internal virtual void RemoveAt(int index)
         {
+            InitializeCheck();
             if ((uint)index >= (uint)_idList.Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
@@ -223,11 +237,10 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// Returns the index of the specified item in the filtered view.
         /// </summary>
         /// <param name="item">The item to locate.</param>
-        /// <returns>
-        /// The index of the item if found; otherwise, -1.
-        /// </returns>
+        /// <returns>The index of the item if found; otherwise, -1.</returns>
         public virtual int IndexOf(ItemValue item)
         {
+            InitializeCheck();
             if (_base._baseList.TryGetKey(item, out int id))
             {
                 return _idList.IndexOf(id);
@@ -241,14 +254,14 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// Sorts the filtered view using the default comparer.
         /// </summary>
         /// <returns>True if the sort operation is successful; otherwise, false.</returns>
-        public virtual bool Sort() => Sort(0, _idList.Count, null);
+        public bool Sort() => Sort(0, _idList.Count, null);
 
         /// <summary>
         /// Sorts the filtered view using the specified comparer.
         /// </summary>
         /// <param name="comparer">The comparer used to sort the items.</param>
         /// <returns>True if the sort operation is successful; otherwise, false.</returns>
-        public virtual bool Sort(IComparer<ItemValue>? comparer) => Sort(0, _idList.Count, comparer);
+        public bool Sort(IComparer<ItemValue>? comparer) => Sort(0, _idList.Count, comparer);
 
         /// <summary>
         /// Sorts a range of items in the filtered view using the specified comparer.
@@ -257,31 +270,36 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <param name="count">The number of items to sort.</param>
         /// <param name="comparer">The comparer used to sort the items.</param>
         /// <returns>True if the sort operation is successful; otherwise, false.</returns>
-        public virtual bool Sort(int index, int count, IComparer<ItemValue>? comparer) => _idList.Sort(index, count, comparer != null ? new FilterComparer(_base, comparer) : null);
+        public virtual bool Sort(int index, int count, IComparer<ItemValue>? comparer)
+        {
+            InitializeCheck();
+            return _idList.Sort(index, count, comparer != null ? new FilterComparer(_base, comparer) : null);
+        }
 
         /// <summary>
         /// Sorts the filtered view using the specified comparison delegate.
         /// </summary>
         /// <param name="comparison">The comparison delegate used to sort the items.</param>
         /// <returns>True if the sort operation is successful; otherwise, false.</returns>
-        public virtual bool Sort(Comparison<ItemValue> comparison) => this.Sort(Comparer<ItemValue>.Create(comparison));
+        public bool Sort(Comparison<ItemValue> comparison) => this.Sort(Comparer<ItemValue>.Create(comparison));
 
         /// <summary>
         /// Adds an item by its ID to the filtered view and re-sorts it into the correct position.
-        /// This method also propagates the change to all child filtered views.
+        /// The change is also propagated to all child filtered views.
         /// </summary>
         /// <param name="id">The unique identifier of the item to add and sort.</param>
-        /// <returns>True if the item is added and re-sorted; otherwise, false.</returns>
-        internal virtual int AddRedoLastSort(int id)
+        /// <returns>The index at which the item was inserted; or -1 if the item did not pass the filter.</returns>
+        internal int AddRedoLastSort(int id)
         {
+            InitializeCheck();
             if (FilterCheck(id))
             {
                 int index = _idList.BinarySearch(id, _idList.LastComparer);
                 if (index < 0)
                     index = ~index;
-                bool DirtySave = _idList.IsDirty;
+                bool dirtySave = _idList.IsDirty;
                 _idList.Insert(index, id);
-                _idList.IsDirty = DirtySave;
+                _idList.IsDirty = dirtySave;
                 foreach (var child in _children)
                 {
                     child.Value.AddRedoLastSort(id);
@@ -295,14 +313,19 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// Re-sorts the filtered view using the last used sorting logic.
         /// </summary>
         /// <returns>True if the re-sort operation is successful; otherwise, false.</returns>
-        public virtual bool RedoLastSort() => _idList.RedoLastSort();
+        public bool RedoLastSort()
+        {
+            InitializeCheck();
+            return _idList.RedoLastSort();
+        }
 
         /// <summary>
         /// Recursively re-sorts the filtered view and all its child filtered views.
         /// </summary>
-        /// <returns>True if the re-sort operation is successful; otherwise, false.</returns>
-        public virtual bool RedoLastSortRecursively()
+        /// <returns>True if the re-sort operation is successful for all views; otherwise, false.</returns>
+        public bool RedoLastSortRecursively()
         {
+            InitializeCheck();
             bool result = RedoLastSort();
             foreach (var child in _children)
             {
@@ -316,6 +339,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         #region Filter Methods
 
         private bool _currentFilterAll = false;
+
         /// <summary>
         /// Changes the filter function applied to this view and updates the view accordingly.
         /// Items that no longer satisfy the filter are removed, and items that now satisfy
@@ -325,9 +349,11 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <returns>True if the filter function was changed; otherwise, false.</returns>
         public virtual bool ChangeFilter(Func<ItemValue, bool>? filterFunc)
         {
+            InitializeCheck();
             if ((filterFunc == null && !_currentFilterAll) || FilterFunc != filterFunc)
             {
                 FilterFunc = filterFunc;
+
                 // Create a set of IDs from the base collection (or parent's filtered list if available).
                 HashSet<int> parentIdHashSet = _parent == null ? [.. _base._baseList.Keys] : [.. _parent._idList];
                 // Create a set of IDs that are currently in this view.
@@ -337,7 +363,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                 {
                     _currentFilterAll = true;
                     // If no filter is specified, add all items from the base that are not already in the view.
-
                     AddRange(parentIdHashSet.Except(idHashSet));
                 }
                 else
@@ -364,13 +389,12 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <summary>
         /// Retrieves the child filtered view associated with the specified filter key.
         /// </summary>
-        /// <param name="filterName">The key identifying the filtered view.</param>
-        /// <returns>
-        /// The child filtered view if it exists; otherwise, null.
-        /// </returns>
-        public virtual TFiltered? GetFilterView(FilterKey filterName)
+        /// <param name="filterKey">The key identifying the filtered view.</param>
+        /// <returns>The child filtered view if it exists; otherwise, null.</returns>
+        public TFiltered? GetFilterView(FilterKey filterKey)
         {
-            if (_children.TryGetValue(filterName, out TFiltered? value))
+            InitializeCheck();
+            if (_children.TryGetValue(filterKey, out TFiltered? value))
                 return value;
             return null;
         }
@@ -378,53 +402,49 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <summary>
         /// Adds a new child filtered view to this view using a filter function and an optional comparer.
         /// </summary>
-        /// <param name="filterName">The key that identifies the new filtered view.</param>
+        /// <param name="filterKey">The key that identifies the new filtered view.</param>
         /// <param name="filter">An optional filter function to select items.</param>
         /// <param name="comparer">An optional comparer for sorting the items in the child view.</param>
-        public virtual void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
+        /// <returns>The newly created child filtered view.</returns>
+        public TFiltered AddFilterView(FilterKey filterKey, Func<ItemValue, bool>? filter, IComparer<ItemValue>? comparer)
         {
-            _children.Add(filterName, CreateChildCollection(_base, (TFiltered)this, filter, comparer));
-        }
-
-        /// <summary>
-        /// Adds a new child filtered view to this view using a filter function and an optional comparison delegate.
-        /// </summary>
-        /// <param name="filterName">The key that identifies the new filtered view.</param>
-        /// <param name="filter">An optional filter function to select items.</param>
-        /// <param name="comparison">An optional comparison delegate for sorting the items in the child view.</param>
-        public virtual void AddFilterView(FilterKey filterName, Func<ItemValue, bool>? filter, Comparison<ItemValue> comparison)
-        {
-            _children.Add(filterName, CreateChildCollection(_base, (TFiltered)this, filter, comparison));
+            InitializeCheck();
+            TFiltered newFilter = CreateChildCollection(_base, (TFiltered)this, filter, comparer);
+            _children.Add(filterKey, newFilter);
+            return newFilter;
         }
 
         /// <summary>
         /// Removes the child filtered view associated with the specified filter key.
         /// </summary>
-        /// <param name="filterName">The key identifying the filtered view to remove.</param>
-        public virtual void RemoveFilterView(FilterKey filterName)
+        /// <param name="filterKey">The key identifying the filtered view to remove.</param>
+        /// <returns>True if the item was successfully removed; otherwise, false.</returns>
+        public bool RemoveFilterView(FilterKey filterKey)
         {
-            _children.Remove(filterName);
+            InitializeCheck();
+            return _children.Remove(filterKey);
         }
 
         #endregion Filter Methods
-    }
 
-    #region FilterEnumerator Struct
+        #region FilterEnumerator Struct
 
-    /// <summary>
-    /// Enumerator for iterating over the items in a <see cref="MultiLevelCascadeFilteredViewBase{FilterKey, ItemValue, TCollection, TFiltered}"/>.
-    /// </summary>
-    public abstract partial class MultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, TCollection, TFiltered>
-    {
+        /// <summary>
+        /// Enumerator for iterating through the filtered items.
+        /// </summary>
         public struct FilterEnumerator : IEnumerator<ItemValue>, System.Collections.IEnumerator
         {
             // Reference to the base collection to access items by ID.
             private readonly TCollection _base;
             // The list of item IDs included in the filtered view.
             private readonly DirtySortList<int> _idList;
+            // Current index in the enumeration.
+            private int _index;
+            // Current item being enumerated.
+            private ItemValue? _current;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="FilterEnumerator"/>.
+            /// Initializes a new instance of the <see cref="FilterEnumerator"/> struct.
             /// </summary>
             /// <param name="base">The base collection instance.</param>
             /// <param name="idList">The list of item IDs in the filtered view.</param>
@@ -436,17 +456,10 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                 _current = default;
             }
 
-            // The current index in the enumeration.
-            private int _index;
-            // The current item being enumerated.
-            private ItemValue? _current;
-
             /// <summary>
             /// Releases any resources used by the enumerator.
             /// </summary>
-            public readonly void Dispose()
-            {
-            }
+            public readonly void Dispose() { }
 
             /// <summary>
             /// Advances the enumerator to the next element.
@@ -454,7 +467,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             /// <returns>True if the enumerator was successfully advanced; otherwise, false.</returns>
             public bool MoveNext()
             {
-                if (((uint)_index < (uint)_idList.Count))
+                if ((uint)_index < (uint)_idList.Count)
                 {
                     _current = _base[_idList[_index]];
                     _index++;
@@ -464,7 +477,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
 
             /// <summary>
-            /// Handles the termination of enumeration.
+            /// Handles the termination of the enumeration.
             /// </summary>
             /// <returns>False, indicating the end of the collection.</returns>
             private bool MoveNextRare()
@@ -487,9 +500,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                 get
                 {
                     if (_index == 0 || _index == _idList.Count + 1)
-                    {
                         throw new InvalidOperationException();
-                    }
                     return Current;
                 }
             }
@@ -503,17 +514,14 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                 _current = default;
             }
         }
-    }
 
-    #endregion FilterEnumerator Struct
+        #endregion FilterEnumerator Struct
 
-    #region FilterComparer Class
+        #region FilterComparer Class
 
-    /// <summary>
-    /// Provides a comparer for sorting item IDs in a filtered view by comparing the underlying items.
-    /// </summary>
-    public abstract partial class MultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, TCollection, TFiltered>
-    {
+        /// <summary>
+        /// Comparer for item IDs that uses a provided comparer to compare the corresponding items in the base collection.
+        /// </summary>
         private partial class FilterComparer(TCollection @base, IComparer<ItemValue>? comparer) : IComparer<int>
         {
             // The comparer used to compare the actual items.
@@ -525,16 +533,16 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             /// <param name="x">The first item ID.</param>
             /// <param name="y">The second item ID.</param>
             /// <returns>
-            /// A signed integer that indicates the relative values of the items; less than zero if x is less than y,
-            /// zero if x equals y, and greater than zero if x is greater than y.
+            /// A signed integer that indicates the relative values of the items;
+            /// less than zero if x is less than y, zero if x equals y, and greater than zero if x is greater than y.
             /// </returns>
             public int Compare(int x, int y)
             {
                 return _comparer.Compare(@base._baseList[x], @base._baseList[y]);
             }
         }
-    }
 
-    #endregion FilterComparer Class
+        #endregion FilterComparer Class
+    }
 }
 
