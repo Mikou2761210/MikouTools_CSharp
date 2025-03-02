@@ -29,7 +29,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             }
             else
             {
-                // If the current thread is not a UI thread, post to the UI context.
+                // If the current thread is not a UI thread, send to the UI context.
                 UIContext.Send(_ => CollectionChanged?.Invoke(this, e), null);
             }
         }
