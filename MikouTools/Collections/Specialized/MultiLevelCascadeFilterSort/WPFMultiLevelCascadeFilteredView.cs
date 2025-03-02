@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -21,7 +22,6 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         {
             if (_suppressNotification)
                 return;
-
             // If the UI context has not been captured, call it directly.
             if (UIContext == null || SynchronizationContext.Current == UIContext)
             {
@@ -194,7 +194,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
                 int result = BaseThis.Move(fromIndex, toIndex);
                 if (result != -1)
                 {
-                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, _base[_idList[result]], fromIndex, result));
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, _base[_idList[result]], result, fromIndex));
                 }
                 return result;
             }
@@ -273,7 +273,8 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return await Task.Run(() =>
             {
                 bool result = base.ChangeFilter(filterFunc);
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                if (result)
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
                 return result;
             }).ConfigureAwait(false);
         }
@@ -289,7 +290,8 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             return await Task<bool>.Run(() =>
             {
                 bool result = base.Sort(comparer);
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                if (result)
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
                 return result;
             }).ConfigureAwait(false);
         }
