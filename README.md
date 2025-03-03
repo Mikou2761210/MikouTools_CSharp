@@ -10,4 +10,5 @@ Currently, these are the classes that I can confidently say I have built well.(ç
 [ThreadResourceManager](https://github.com/Mikou2761210/MikouTools/blob/main/MikouTools/Thread/Specialized/ThreadResourceManager.cs)  
 [DualKeyDictionary](https://github.com/Mikou2761210/MikouTools/blob/main/MikouTools/Collections/Optimized/DualKeyDictionary.cs)  
 [IndexedSet](https://github.com/Mikou2761210/MikouTools/blob/main/MikouTools/Collections/Optimized/IndexedSet.cs)  
-[MultiLevelCascadeCollectionBase(beta)](https://github.com/Mikou2761210/MikouTools/blob/main/MikouTools/Collections/Specialized/MultiLevelCascadeFilterSort/MultiLevelCascadeCollectionBase.cs)  
+[MultiLevelCascadeCollectionBase(beta)](https://github.com/Mikou2761210/MikouTools/blob/main/MikouTools/Collections/Specialized/MultiLevelCascadeFilterSort/MultiLevelCascadeCollectionBase.cs)
+(This class was previously part of MikouTools, but has now been separated into the [MultiLevelCascadeFilterSort](https://github.com/Mikou2761210/MultiLevelCascadeFilterSort) repository. Please use [MultiLevelCascadeFilterSort](https://github.com/Mikou2761210/MultiLevelCascadeFilterSort) moving forward.)
