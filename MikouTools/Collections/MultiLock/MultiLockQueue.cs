@@ -35,7 +35,7 @@ namespace MikouTools.Collections.MultiLock
                 return base.Dequeue();
             return base.Peek();
         }
-        public new bool? TryDequeue(out T? result)
+        public new virtual bool TryDequeue(out T? result)
         {
             result = default;
             if (!RemoveLock)

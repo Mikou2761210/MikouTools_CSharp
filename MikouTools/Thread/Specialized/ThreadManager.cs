@@ -1,5 +1,6 @@
 ﻿using MikouTools.Collections.Signaling;
 using MikouTools.Thread.Utils;
+using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Threading;
 
@@ -25,7 +26,7 @@ namespace MikouTools.Thread.Specialized
         internal System.Threading.Thread thread;
 
         // A specialized queue that signals when there are items (Process tasks) to process.
-        readonly CountSignalingQueue<Process> ProcessQueue = new(count => count > 0);
+        readonly CountSignalingQueue<Process> ProcessQueue = new(count => count <= 0, count => count > 0);
 
         // Provides get/set access to the thread's name.
         public string? ThreadName
@@ -83,7 +84,17 @@ namespace MikouTools.Thread.Specialized
             // If the thread is idle, start it.
             if (_threadManagerState.SetAndReturnOld(ThreadManagerState.Wait) == ThreadManagerState.Idle)
                 thread.Start();
-
+            Debug.WriteLine($"{System.Threading.Thread.CurrentThread.Name}{thread.Name}");
+            if (System.Threading.Thread.CurrentThread == thread)
+            {
+                Exception? exception = null;
+                try
+                {
+                    action();
+                }
+                catch (Exception ex) { exception = ex; }
+                return exception;
+            }
             // Wrap the action in a Process.
             Process process = new(action);
             // Enqueue the Process for execution.
