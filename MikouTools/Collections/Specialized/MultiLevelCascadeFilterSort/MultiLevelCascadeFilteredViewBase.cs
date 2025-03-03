@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 {
+    [Obsolete("This class was previously part of MikouTools but is now maintained as a standalone repository. It is recommended to use the new repository.")]
     /// <summary>
     /// Base class for a filtered view in a multi-level cascade collection.
     /// This class provides filtering, sorting, and child view management functionality.

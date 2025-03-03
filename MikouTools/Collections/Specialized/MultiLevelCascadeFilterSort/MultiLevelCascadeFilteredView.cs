@@ -1,5 +1,6 @@
 ﻿namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 {
+    [Obsolete("This class was previously part of MikouTools but is now maintained as a standalone repository. It is recommended to use the new repository.")]
     public class MultiLevelCascadeFilteredView<FilterKey, ItemValue> : MultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, MultiLevelCascadeCollection<FilterKey, ItemValue>, MultiLevelCascadeFilteredView<FilterKey, ItemValue>>
             where FilterKey : notnull
             where ItemValue : notnull

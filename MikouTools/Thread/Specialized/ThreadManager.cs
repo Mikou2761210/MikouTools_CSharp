@@ -84,7 +84,6 @@ namespace MikouTools.Thread.Specialized
             // If the thread is idle, start it.
             if (_threadManagerState.SetAndReturnOld(ThreadManagerState.Wait) == ThreadManagerState.Idle)
                 thread.Start();
-            Debug.WriteLine($"{System.Threading.Thread.CurrentThread.Name}{thread.Name}");
             if (System.Threading.Thread.CurrentThread == thread)
             {
                 Exception? exception = null;

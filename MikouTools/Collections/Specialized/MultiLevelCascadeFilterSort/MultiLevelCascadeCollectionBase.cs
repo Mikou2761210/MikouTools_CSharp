@@ -3,6 +3,7 @@ using MikouTools.Collections.Optimized;
 
 namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 {
+    [Obsolete("This class was previously part of MikouTools but is now maintained as a standalone repository. It is recommended to use the new repository.")]
     /// <summary>
     /// Base class for a multi-level cascade collection that stores items with unique integer IDs
     /// and supports child filtered views.

@@ -13,7 +13,7 @@ namespace MikouTools.Collections.Specialized
         // The next unique ID to assign when no reusable IDs are available.
         private int _latestId = -1;
 
-        public int NewId()
+        public int GenerateUniqueNumber()
         {
             if (_availableIds.Count > 0)
             {
@@ -24,14 +24,18 @@ namespace MikouTools.Collections.Specialized
             return ++_latestId;
         }
 
-        public void ReturnId(int id)
+        public void ReleaseUniqueNumber(int id)
         {
             if (id < 0 || id > _latestId)
                 return;
 
             if (_latestId == id)
             {
-                _latestId = _availableIds.Max;
+                _latestId--;
+                while (_availableIds.Remove(_latestId))
+                {
+                    _latestId--;
+                }
             }
             else
             {

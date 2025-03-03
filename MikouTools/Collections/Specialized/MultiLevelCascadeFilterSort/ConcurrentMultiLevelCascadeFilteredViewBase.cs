@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 {
+    [Obsolete("This class was previously part of MikouTools but is now maintained as a standalone repository. It is recommended to use the new repository.")]
 
     public abstract class ConcurrentMultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, TCollection, TFiltered> : MultiLevelCascadeFilteredViewBase<FilterKey, ItemValue, TCollection, TFiltered>, IEnumerable
         where FilterKey : notnull

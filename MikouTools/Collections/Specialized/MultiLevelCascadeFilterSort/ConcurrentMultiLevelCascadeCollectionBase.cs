@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 {
+    [Obsolete("This class was previously part of MikouTools but is now maintained as a standalone repository. It is recommended to use the new repository.")]
     public abstract class ConcurrentMultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered> : MultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered>
         where FilterKey : notnull
         where ItemValue : notnull
