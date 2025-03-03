@@ -20,7 +20,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
         /// <summary>
         /// An object for accessing base classes
         /// </summary>
-        internal TCollection BaseThis => (TCollection)this;
+        internal MultiLevelCascadeCollectionBase<FilterKey, ItemValue, TCollection, TFiltered> BaseThis => this;
 
         // Dictionary that stores the base items using a unique integer key.
         internal DualKeyDictionary<int, ItemValue> _baseList;

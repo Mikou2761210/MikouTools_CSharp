@@ -115,7 +115,7 @@
         /// The lock will be automatically released when the handle is disposed (for example, when used in a using statement).
         /// </summary>
         /// <returns>A LockHandle instance that holds the lock on the property.</returns>
-        public LockHandle LockAndGetList()
+        public LockHandle LockAndGetValue()
         {
             return new LockHandle(this);
         }
