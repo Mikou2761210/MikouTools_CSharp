@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Comparer
 {
-    public class NaturalStringComparer : IComparer<string>
+    public class NaturalStringComparer(bool isAscending = true) : IComparer<string>
     {
 
         [DllImport("shlwapi.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
@@ -18,9 +18,9 @@ namespace MikouTools.Collections.Comparer
         public int Compare(string? x, string? y)
         {
             if (x is null && y is null) return 0;
-            if (x is null) return -1;
-            if (y is null) return 1;
-            return StrCmpLogicalW(x, y);
+            if (x is null) return 1;
+            if (y is null) return -1;
+            return isAscending ? StrCmpLogicalW(x, y) : StrCmpLogicalW(y, x);
         }
 
     }
