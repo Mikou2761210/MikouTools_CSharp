@@ -1,5 +1,4 @@
-﻿using MikouTools.Thread.Utils;
-using System.Collections;
+﻿using System.Collections;
 
 namespace MikouTools.Collections.MultiLock
 {
