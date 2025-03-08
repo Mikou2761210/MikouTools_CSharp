@@ -1,9 +1,9 @@
-﻿using MikouTools.Collections.Overrideable;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
 namespace MikouTools.Collections.Notifying
 {
-    public class NotifyingList<T> : OverrideableList<T>, INotifyCollectionChanged
+    public class NotifyingCollection<T> : Collection<T>, INotifyCollectionChanged
     {
         #region UI
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
@@ -25,69 +25,40 @@ namespace MikouTools.Collections.Notifying
             }
         }
 
-
         public virtual void BeginBulkUpdate() => _suppressNotification = true;
-
 
         public virtual void EndBulkUpdate()
         {
             _suppressNotification = false;
+
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
         #endregion
 
-        #region List<T> override
-        public override void Add(T item)
+        #region Collection<T> override
+        protected override void InsertItem(int index, T item)
         {
-            base.Add(item);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, this.Count - 1));
-        }
-
-        public override void Insert(int index, T item)
-        {
-            base.Insert(index, item);
+            base.InsertItem(index, item);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
         }
 
-        public override bool Remove(T item)
-        {
-            int index = this.IndexOf(item);
-            bool removed = base.Remove(item);
-            if (removed)
-            {
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item, index));
-            }
-            return removed;
-        }
-
-        public override void RemoveAt(int index)
+        protected override void RemoveItem(int index)
         {
             T removedItem = this[index];
-            base.RemoveAt(index);
+            base.RemoveItem(index);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, removedItem, index));
         }
 
-        public override void Clear()
+        protected override void SetItem(int index, T item)
         {
-            base.Clear();
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            T oldItem = this[index];
+            base.SetItem(index, item);
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, item, oldItem, index));
         }
 
-        public override T this[int index]
+        protected override void ClearItems()
         {
-            get => base[index];
-            set
-            {
-                T oldItem = base[index];
-                base[index] = value;
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value, oldItem, index));
-            }
-        }
-
-
-        public override void Sort(int index, int count, IComparer<T>? comparer)
-        {
-            base.Sort(index, count, comparer);
+            base.ClearItems();
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
         #endregion

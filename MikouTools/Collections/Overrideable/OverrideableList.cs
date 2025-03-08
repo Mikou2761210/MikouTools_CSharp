@@ -204,20 +204,20 @@
         // Sort
         public new virtual void Sort()
         {
-            base.Sort();
+            Sort(0, Count, null);
         }
 
-        public new virtual void Sort(IComparer<T> comparer)
+        public new virtual void Sort(IComparer<T>? comparer)
         {
-            base.Sort(comparer);
+            Sort(0, Count, comparer);
         }
 
         public new virtual void Sort(Comparison<T> comparison)
         {
-            base.Sort(comparison);
+            Sort(0, Count, Comparer<T>.Create(comparison));
         }
 
-        public new virtual void Sort(int index, int count, IComparer<T> comparer)
+        public new virtual void Sort(int index, int count, IComparer<T>? comparer)
         {
             base.Sort(index, count, comparer);
         }
