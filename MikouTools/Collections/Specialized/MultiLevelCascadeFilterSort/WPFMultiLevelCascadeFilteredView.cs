@@ -47,7 +47,7 @@ namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
-        private WPFMultiLevelCascadeCollection<FilterKey, ItemValue> _base;
+        private readonly WPFMultiLevelCascadeCollection<FilterKey, ItemValue> _base;
         internal WPFMultiLevelCascadeFilteredView(WPFMultiLevelCascadeCollection<FilterKey, ItemValue> @base, WPFMultiLevelCascadeFilteredView<FilterKey, ItemValue>? parent = null, Func<ItemValue, bool>? filter = null, IComparer<ItemValue>? comparer = null) : base(@base, parent)
         {
             _base = @base;

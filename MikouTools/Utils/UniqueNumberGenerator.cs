@@ -1,8 +1,8 @@
-﻿namespace MikouTools.Collections.Specialized
+﻿namespace MikouTools.Utils
 {
     public class UniqueNumberGenerator
     {
-        private readonly SortedSet<int> _availableIds = new SortedSet<int>();
+        private readonly SortedSet<int> _availableIds = [];
 
         // The next unique ID to assign when no reusable IDs are available.
         private int _latestId = -1;
@@ -36,5 +36,28 @@
                 _availableIds.Add(id);
             }
         }
+
+        public bool TryClaimUniqueNumber(int id)
+        {
+            if (id < 0)
+            {
+                return false;
+            }
+
+            if (id <= _latestId)
+            {
+                return _availableIds.Remove(id);
+            }
+            else
+            {
+                for (int i = _latestId + 1; i < id; i++)
+                {
+                    _availableIds.Add(i);
+                }
+                _latestId = id;
+                return true;
+            }
+        }
     }
+
 }
