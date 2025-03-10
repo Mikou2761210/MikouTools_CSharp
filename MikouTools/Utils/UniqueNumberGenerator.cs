@@ -7,6 +7,14 @@
         // The next unique ID to assign when no reusable IDs are available.
         private int _latestId = -1;
 
+
+        public UniqueNumberGenerator(IEnumerable<int>? initialUsedIDs = null)
+        {
+            if (initialUsedIDs != null)
+                foreach (int id in initialUsedIDs) TryClaimUniqueNumber(id);
+        }
+
+
         public int GenerateUniqueNumber()
         {
             if (_availableIds.Count > 0)

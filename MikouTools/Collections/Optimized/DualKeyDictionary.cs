@@ -94,8 +94,15 @@ namespace MikouTools.Collections.Optimized
             get => base[key];
             set
             {
-                if (base.ContainsKey(key) || _reverseDictionary.ContainsKey(value))
+                if (_reverseDictionary.TryGetValue(value, out TKey? existingKey) && !existingKey.Equals(key))
                     throw new ArgumentException("Item already exists in the dictionary.");
+
+                if (base.ContainsKey(key))
+                {
+                    TValue oldValue = base[key];
+                    _reverseDictionary.Remove(oldValue);
+                }
+
 
                 base[key] = value;
                 _reverseDictionary[value] = key;
