@@ -10,7 +10,7 @@
             if (dirpath == null) return;
             Directory.CreateDirectory(dirpath, false);
 
-            using (StreamWriter writer = new StreamWriter(path, false, new System.Text.UTF8Encoding(false)))
+            using (StreamWriter writer = new(path, false, new System.Text.UTF8Encoding(false)))
             {
                 writer.Write(fileSaveData);
                 writer.Close();
@@ -137,6 +137,21 @@
             }
 
             return false;
+        }
+
+
+        public static void SaveBytes(string path, byte[] data)
+        {
+            using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.WriteThrough);
+            fs.Write(data, 0, data.Length);
+        }
+
+        public static byte[] LoadBytes(string path)
+        {
+            using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
+            byte[] buffer = new byte[fs.Length];
+            fs.Read(buffer, 0, buffer.Length);
+            return buffer;
         }
     }
 
