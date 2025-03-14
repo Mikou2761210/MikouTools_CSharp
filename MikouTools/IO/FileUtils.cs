@@ -1,6 +1,6 @@
 ﻿namespace MikouTools.IO
 {
-    public static class File
+    public static class FileUtils
     {
         public static void StringFileSave(string path, string fileSaveData, bool overwrite = true)
         {
@@ -8,7 +8,7 @@
 
             string? dirpath = System.IO.Path.GetDirectoryName(path);
             if (dirpath == null) return;
-            Directory.CreateDirectory(dirpath, false);
+            DirectoryUtils.CreateDirectory(dirpath, false);
 
             using (StreamWriter writer = new(path, false, new System.Text.UTF8Encoding(false)))
             {
@@ -80,9 +80,9 @@
                 return nullResult;
             }
         }
-        public static string AvoidPathDuplication(string path, string Bracket_1 = " [", string Bracket_2 = "]")
+        public static string GetUniquePath(string basePath, string delimiterStart = "[", string delimiterEnd = "]", int startCandidateNumber = 2)
         {
-            return IO.Path.AvoidPathDuplication(path, false, Bracket_1, Bracket_2);
+            return IO.PathUtils.GetUniquePath(basePath, false, delimiterStart, delimiterEnd, startCandidateNumber);
         }
 
         public static bool IsFileEmpty(string filePath)
@@ -91,6 +91,8 @@
             return !fileInfo.Exists || fileInfo.Length == 0;
         }
 
+
+        #region FileLock
         /// <summary>
         /// Waits for the file to be unlocked within a given timeout period.
         /// </summary>
@@ -138,11 +140,12 @@
 
             return false;
         }
+        #endregion
 
-
-        public static void SaveBytes(string path, byte[] data)
+        #region SaveLoadBytes
+        public static void SaveBytes(string path, byte[] data , FileOptions fileOptions = FileOptions.None)
         {
-            using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.WriteThrough);
+            using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, 4096, fileOptions);
             fs.Write(data, 0, data.Length);
         }
 
@@ -153,6 +156,29 @@
             fs.Read(buffer, 0, buffer.Length);
             return buffer;
         }
+
+        public static bool TrySaveBytes(string path, byte[] data, FileOptions fileOptions = FileOptions.None)
+        {
+            try
+            {
+                SaveBytes(path, data, fileOptions);
+                return true;
+            }
+            catch (Exception) {}
+            return false;
+        }
+        public static bool TryLoadBytes(string path, out byte[]? value)
+        {
+            try
+            {
+                value = LoadBytes(path);
+                return true;
+            }
+            catch (Exception) { }
+            value = null;
+            return false;
+        }
+        #endregion
     }
 
 

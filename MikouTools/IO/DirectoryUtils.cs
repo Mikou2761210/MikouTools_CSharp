@@ -1,7 +1,7 @@
 ﻿namespace MikouTools.IO
 {
 
-    public static class Directory
+    public static class DirectoryUtils
     {
         public static bool CreateDirectory(string Path, bool Overwrite = true, bool Hidden = false)
         {
@@ -45,9 +45,9 @@
             System.IO.Directory.Delete(targetDirectoryPath, false);
         }
 
-        public static string AvoidPathDuplication(string Path, string Bracket_1 = " [", string Bracket_2 = "]")
+        public static string GetUniquePath(string basePath, string delimiterStart = "[", string delimiterEnd = "]", int startCandidateNumber = 2)
         {
-            return IO.Path.AvoidPathDuplication(Path, true, Bracket_1, Bracket_2);
+            return IO.PathUtils.GetUniquePath(basePath, true, delimiterStart, delimiterEnd, startCandidateNumber);
         }
     }
 
