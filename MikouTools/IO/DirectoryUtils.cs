@@ -45,9 +45,9 @@
             System.IO.Directory.Delete(targetDirectoryPath, false);
         }
 
-        public static string GetUniquePath(string basePath, string delimiterStart = "[", string delimiterEnd = "]", int startCandidateNumber = 2)
+        public static string GetUniquePath(string basePath, out int finalCandidateNumber, string delimiterStart = "[", string delimiterEnd = "]", int startCandidateNumber = 2)
         {
-            return IO.PathUtils.GetUniquePath(basePath, true, delimiterStart, delimiterEnd, startCandidateNumber);
+            return IO.PathUtils.GetUniquePath(basePath, true, out finalCandidateNumber, delimiterStart, delimiterEnd, startCandidateNumber);
         }
     }
 

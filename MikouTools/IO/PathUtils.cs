@@ -29,8 +29,9 @@ namespace MikouTools.IO
         }
 
 
-        public static string GetUniquePath(string basePath, bool isDirectory = false, string delimiterStart = "[", string delimiterEnd = "]", int startCandidateNumber = 2)
+        public static string GetUniquePath(string basePath,bool isDirectory, out int finalCandidateNumber, string delimiterStart = "[", string delimiterEnd = "]", int startCandidateNumber = 2)
         {
+            finalCandidateNumber = startCandidateNumber;
             // 対象パスが未使用なら、そのまま返す
             if ((!isDirectory && !File.Exists(basePath) && !Directory.Exists(basePath)) || (isDirectory && !Directory.Exists(basePath) && !File.Exists(basePath)))
             {
@@ -44,9 +45,9 @@ namespace MikouTools.IO
                 string nameWithoutExt = Path.GetFileNameWithoutExtension(basePath);
                 string extension = Path.GetExtension(basePath);
 
-                for (int candidateNum = startCandidateNumber; ; candidateNum++)
+                for (; ; finalCandidateNumber++)
                 {
-                    string candidate = Path.Combine(dir, $"{nameWithoutExt}{delimiterStart}{candidateNum}{delimiterEnd}{extension}");
+                    string candidate = Path.Combine(dir, $"{nameWithoutExt}{delimiterStart}{finalCandidateNumber}{delimiterEnd}{extension}");
                     if (!File.Exists(candidate) && !Directory.Exists(candidate))
                     {
                         return candidate;
@@ -56,9 +57,9 @@ namespace MikouTools.IO
             else
             {
                 // ディレクトリの場合
-                for (int candidateNum = startCandidateNumber; ; candidateNum++)
+                for (; ; finalCandidateNumber++)
                 {
-                    string candidate = $"{basePath}{delimiterStart}{candidateNum}{delimiterEnd}";
+                    string candidate = $"{basePath}{delimiterStart}{finalCandidateNumber}{delimiterEnd}";
                     if (!File.Exists(candidate) && !Directory.Exists(candidate))
                     {
                         return candidate;
