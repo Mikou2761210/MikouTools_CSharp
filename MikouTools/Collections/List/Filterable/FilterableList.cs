@@ -1,7 +1,7 @@
-﻿using MikouTools.Collections.Overrideable;
+﻿using MikouTools.Collections.List.Overrideable;
 using System.Collections;
 
-namespace MikouTools.Collections.Filterable
+namespace MikouTools.Collections.List.Filterable
 {
     /// <summary>
     /// A list that supports filtering. It maintains both the full list (inherited from the base)
@@ -199,9 +199,9 @@ namespace MikouTools.Collections.Filterable
                 if (IsFullMode)
                 {
                     T oldItem = base[index];
-                    bool wasFiltered = (filterPredicate != null && filterPredicate(oldItem));
+                    bool wasFiltered = filterPredicate != null && filterPredicate(oldItem);
                     base[index] = value;
-                    bool isFiltered = (filterPredicate != null && filterPredicate(value));
+                    bool isFiltered = filterPredicate != null && filterPredicate(value);
 
                     if (wasFiltered)
                     {

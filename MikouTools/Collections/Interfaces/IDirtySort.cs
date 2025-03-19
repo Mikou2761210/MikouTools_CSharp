@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MikouTools.Collections.DirtySort
+namespace MikouTools.Collections.Interfaces
 {
     public interface IDirtySort<T>
     {

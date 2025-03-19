@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using MikouTools.Collections.Interfaces;
+using System.Collections;
 
-namespace MikouTools.Collections.MultiLock
+namespace MikouTools.Collections.Queue.MultiLock
 {
-    public class MultiLockQueue : Queue, IMultiLock
+    public class MultiLockQueue : System.Collections.Queue, IMultiLock
     {
         public virtual bool AddLock { get; set; }
         public virtual bool RemoveLock { get; set; }
@@ -23,16 +24,20 @@ namespace MikouTools.Collections.MultiLock
     {
         public virtual bool AddLock { get; set; }
         public virtual bool RemoveLock { get; set; }
-        public new virtual void Enqueue(T obj)
+        public new virtual bool Enqueue(T obj)
         {
             if (!AddLock)
+            {
                 base.Enqueue(obj);
+                return true;
+            }
+            return false;
         }
         public new virtual T Dequeue()
         {
             if (!RemoveLock)
                 return base.Dequeue();
-            return base.Peek();
+            return Peek();
         }
         public new virtual bool TryDequeue(out T? result)
         {

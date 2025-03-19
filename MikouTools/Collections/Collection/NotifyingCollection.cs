@@ -1,9 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using MikouTools.Collections.WPF;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
-namespace MikouTools.Collections.Notifying
+namespace MikouTools.Collections.Collection
 {
-    public class NotifyingCollection<T> : Collection<T>, INotifyCollectionChanged
+    public class NotifyingCollection<T> : Collection<T>, IExtendNotifyCollectionChanged
     {
         #region UI
         public event NotifyCollectionChangedEventHandler? CollectionChanged;

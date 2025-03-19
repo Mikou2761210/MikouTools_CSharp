@@ -1,9 +1,10 @@
-﻿using MikouTools.Collections.Overrideable;
+﻿using MikouTools.Collections.List.Overrideable;
+using MikouTools.Collections.WPF;
 using System.Collections.Specialized;
 
-namespace MikouTools.Collections.Notifying
+namespace MikouTools.Collections.List.Notifying
 {
-    public class NotifyingList<T> : OverrideableList<T>, INotifyCollectionChanged
+    public class NotifyingList<T> : OverrideableList<T>, IExtendNotifyCollectionChanged
     {
         #region UI
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
@@ -40,7 +41,7 @@ namespace MikouTools.Collections.Notifying
         public override void Add(T item)
         {
             base.Add(item);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, this.Count - 1));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, Count - 1));
         }
 
         public override void Insert(int index, T item)
@@ -51,7 +52,7 @@ namespace MikouTools.Collections.Notifying
 
         public override bool Remove(T item)
         {
-            int index = this.IndexOf(item);
+            int index = IndexOf(item);
             bool removed = base.Remove(item);
             if (removed)
             {

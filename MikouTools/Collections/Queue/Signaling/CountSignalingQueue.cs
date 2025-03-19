@@ -1,7 +1,7 @@
-﻿using MikouTools.Collections.MultiLock;
+﻿using MikouTools.Collections.Queue.MultiLock;
 using MikouTools.Thread.Utils;
 
-namespace MikouTools.Collections.Signaling
+namespace MikouTools.Collections.Queue.Signaling
 {
     /// <summary>
     /// Represents the waiting state of the signaling queue.
@@ -188,7 +188,7 @@ namespace MikouTools.Collections.Signaling
         {
             // If waiting is disabled OR (stop condition is met and start condition is not met)
             // AND the state is not AlwaysWait, then set the signal; otherwise, reset it.
-            if ((_state == SignalingQueueState.DisableWait || (StopWaitCondition(count) && !StartWaitCondition(count)))
+            if ((_state == SignalingQueueState.DisableWait || StopWaitCondition(count) && !StartWaitCondition(count))
                  && _state != SignalingQueueState.AlwaysWait)
             {
                 _signal.Set();

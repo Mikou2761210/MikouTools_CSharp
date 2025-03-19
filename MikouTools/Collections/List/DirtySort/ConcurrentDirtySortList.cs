@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MikouTools.Collections.DirtySort
+namespace MikouTools.Collections.List.DirtySort
 {
     public class ConcurrentDirtySortList<T> : DirtySortList<T>
     {
@@ -99,7 +99,7 @@ namespace MikouTools.Collections.DirtySort
             }
         }
 
-        public virtual T PopAt(int index)
+        public override T PopAt(int index)
         {
             T result = base[index];
             base.Remove(result);

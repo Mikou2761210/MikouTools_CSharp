@@ -1,6 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using MikouTools.Collections.Dictionary.Extend;
+using System.Diagnostics.CodeAnalysis;
 
-namespace MikouTools.Collections.Optimized
+namespace MikouTools.Collections.Dictionary.DualKey
 {
     /// <summary>
     /// A dictionary that provides fast bidirectional lookup while ensuring both keys and values are unique.
@@ -8,7 +9,7 @@ namespace MikouTools.Collections.Optimized
     /// </summary>
     /// <typeparam name="TKey">The type of keys in the dictionary. Must be non-nullable.</typeparam>
     /// <typeparam name="TValue">The type of values in the dictionary. Must be non-nullable.</typeparam>
-    public class DualKeyDictionary<TKey, TValue> : Dictionary<TKey, TValue> where TKey : notnull where TValue : notnull
+    public class DualKeyDictionary<TKey, TValue> : Dictionary<TKey, TValue> , IExtendDictionary<TKey,TValue> where TKey : notnull where TValue : notnull
     {
         private readonly Dictionary<TValue, TKey> _reverseDictionary = [];
 
@@ -75,7 +76,7 @@ namespace MikouTools.Collections.Optimized
         /// <exception cref="ArgumentException">Thrown when the key or value already exists.</exception>
         public virtual new void Add(TKey key, TValue value)
         {
-            if (base.ContainsKey(key) || _reverseDictionary.ContainsKey(value))
+            if (ContainsKey(key) || _reverseDictionary.ContainsKey(value))
                 throw new ArgumentException("Item already exists in the dictionary.");
 
             base.Add(key, value);
@@ -97,7 +98,7 @@ namespace MikouTools.Collections.Optimized
                 if (_reverseDictionary.TryGetValue(value, out TKey? existingKey) && !existingKey.Equals(key))
                     throw new ArgumentException("Item already exists in the dictionary.");
 
-                if (base.ContainsKey(key))
+                if (ContainsKey(key))
                 {
                     TValue oldValue = base[key];
                     _reverseDictionary.Remove(oldValue);
@@ -116,7 +117,7 @@ namespace MikouTools.Collections.Optimized
         /// <returns>true if the element is successfully removed; otherwise, false.</returns>
         public virtual new bool Remove(TKey key)
         {
-            if (base.TryGetValue(key, out TValue? value))
+            if (TryGetValue(key, out TValue? value))
             {
                 return base.Remove(key) && _reverseDictionary.Remove(value);
             }
@@ -140,7 +141,7 @@ namespace MikouTools.Collections.Optimized
         /// <returns>true if the element was added; otherwise, false.</returns>
         public virtual new bool TryAdd(TKey key, TValue value)
         {
-            if (base.ContainsKey(key) || _reverseDictionary.ContainsKey(value)) return false;
+            if (ContainsKey(key) || _reverseDictionary.ContainsKey(value)) return false;
 
             base.Add(key, value);
             _reverseDictionary.Add(value, key);
@@ -156,7 +157,7 @@ namespace MikouTools.Collections.Optimized
         /// <exception cref="KeyNotFoundException">Thrown when the key does not exist.</exception>
         public virtual TValue Pop(TKey key)
         {
-            if (base.TryGetValue(key, out TValue? value))
+            if (TryGetValue(key, out TValue? value))
             {
                 base.Remove(key);
                 _reverseDictionary.Remove(value);
@@ -165,9 +166,9 @@ namespace MikouTools.Collections.Optimized
             throw new KeyNotFoundException();
         }
 
-        public virtual bool TryPop(TKey key, [MaybeNullWhen(false)] out TValue? result)
+        public virtual bool TryPop(TKey key, [MaybeNullWhen(false)] out TValue result)
         {
-            if (base.TryGetValue(key, out result))
+            if (TryGetValue(key, out result))
             {
                 base.Remove(key);
                 _reverseDictionary.Remove(result);
@@ -183,7 +184,7 @@ namespace MikouTools.Collections.Optimized
         /// <param name="value">The value whose associated key is to be retrieved.</param>
         /// <param name="key">When this method returns, contains the key associated with the specified value, if found; otherwise, the default value.</param>
         /// <returns>true if the key was found; otherwise, false.</returns>
-        public virtual bool TryGetKey(TValue value, [MaybeNullWhen(false)] out TKey? key)
+        public virtual bool TryGetKey(TValue value, [MaybeNullWhen(false)] out TKey key)
         {
             return _reverseDictionary.TryGetValue(value, out key);
         }

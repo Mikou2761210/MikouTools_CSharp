@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using MikouTools.Collections.Dictionary.DualKey;
+using System.Collections.Generic;
 
-namespace MikouTools.Collections.Optimized
+namespace MikouTools.Collections.Set
 {
-    class IndexedSet<TValue> where TValue : notnull
+    public class IndexedSet<TValue> where TValue : notnull
     {
         readonly  DualKeyDictionary<int, TValue> _value = [];
         public int Count { get; private set; } = 0;

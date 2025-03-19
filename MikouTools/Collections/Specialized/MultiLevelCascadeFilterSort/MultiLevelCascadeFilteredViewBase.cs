@@ -1,4 +1,4 @@
-﻿using MikouTools.Collections.DirtySort;
+﻿using MikouTools.Collections.List.DirtySort;
 using System.Collections;
 using System.Diagnostics;
 

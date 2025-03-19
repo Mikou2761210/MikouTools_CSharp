@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MikouTools.Collections.Interfaces;
+using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace MikouTools.Collections.DirtySort
+namespace MikouTools.Collections.List.DirtySort
 {
     public interface IDirtySortList<T> : IList<T>, IDirtySort<T>;
 
