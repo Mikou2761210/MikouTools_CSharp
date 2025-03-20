@@ -25,10 +25,15 @@ namespace MikouTools.Collections.Specialized.EntityTracking
             _parent = parent;
             _ids = CreateItems();
             _parent.RegisterCollection(this);
+            Initialize();
         }
         ~EntityCollection()
         {
             Dispose(false);
+        }
+        public virtual void Initialize()
+        {
+
         }
 
         public virtual bool Add(int id)

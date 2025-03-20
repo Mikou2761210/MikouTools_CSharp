@@ -32,6 +32,11 @@ namespace MikouTools.Collections.Specialized.EntityTracking
         {
             _collections = CreateCollection();
             _children = CreateChildren();
+            Initialize();
+        }
+        public virtual void Initialize()
+        {
+
         }
 
         public virtual void RegisterCollection(TChild idCollection) => _children.Add(idCollection);
