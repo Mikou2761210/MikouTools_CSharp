@@ -16,7 +16,7 @@ namespace MikouTools.Collections.Specialized.EntityTracking
         protected virtual ICollection<int> _ids { get; set; } 
         public virtual IEnumerable<int> Ids => _ids;
 
-        public virtual ICollection<int> CreateItems()
+        protected virtual ICollection<int> CreateItems()
         {
             return new Collection<int>();
         }
@@ -31,7 +31,7 @@ namespace MikouTools.Collections.Specialized.EntityTracking
         {
             Dispose(false);
         }
-        public virtual void Initialize()
+        protected virtual void Initialize()
         {
 
         }

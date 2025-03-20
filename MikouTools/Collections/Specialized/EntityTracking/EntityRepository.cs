@@ -17,12 +17,12 @@ namespace MikouTools.Collections.Specialized.EntityTracking
         protected virtual ICollection<TChild> _children { get; set; }
         public virtual ICollection<TChild> Children => _children;
 
-        public virtual IDictionary<int, T> CreateCollection()
+        protected virtual IDictionary<int, T> CreateCollection()
         {
             return new Dictionary<int, T>();
         }
 
-        public virtual ICollection<TChild> CreateChildren()
+        protected virtual ICollection<TChild> CreateChildren()
         {
             return new Collection<TChild>();
         }
@@ -34,7 +34,7 @@ namespace MikouTools.Collections.Specialized.EntityTracking
             _children = CreateChildren();
             Initialize();
         }
-        public virtual void Initialize()
+        protected virtual void Initialize()
         {
 
         }
