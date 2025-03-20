@@ -12,15 +12,15 @@ namespace MikouTools.Collections.Specialized.EntityTracking
 {
     public class EntityCollection<T> : IEntityCollection<T> , IDisposable where T : IIdentifiable
     {
-        protected readonly IEntityRepository<T> _parent;
-        protected readonly ICollection<int> _ids;
-        public IEnumerable<int> Ids => _ids;
+        protected readonly IEntityRepository<T, IEntityCollection<T>> _parent;
+        protected virtual ICollection<int> _ids { get; set; } 
+        public virtual IEnumerable<int> Ids => _ids;
 
         public virtual ICollection<int> CreateItems()
         {
             return new Collection<int>();
         }
-        public EntityCollection(IEntityRepository<T> parent)
+        public EntityCollection(IEntityRepository<T, IEntityCollection<T>> parent)
         {
             _parent = parent;
             _ids = CreateItems();

@@ -10,25 +10,33 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.EntityTracking
 {
-    public class EntityRepository<T> : IEntityRepository<T> where T : IIdentifiable
-    {
-        protected readonly IExtendDictionary<int, T> _collections;
-        protected readonly HashSet<IEntityCollection<T>> _children = [];
-        public IReadOnlyCollection<IEntityCollection<T>> Children => _children;
+    public class EntityRepository<T, TChild> : IEntityRepository<T, TChild> where T : IIdentifiable where TChild : IEntityCollection<T>
 
-        public virtual IExtendDictionary<int, T> CreateCollection()
+    {
+        protected virtual IDictionary<int, T> _collections { get; set; }
+        protected virtual ICollection<TChild> _children { get; set; }
+        public virtual ICollection<TChild> Children => _children;
+
+        public virtual IDictionary<int, T> CreateCollection()
         {
-            return new DualKeyDictionary<int, T>();
+            return new Dictionary<int, T>();
         }
+
+        public virtual ICollection<TChild> CreateChildren()
+        {
+            return new Collection<TChild>();
+        }
+
 
         public EntityRepository()
         {
             _collections = CreateCollection();
+            _children = CreateChildren();
         }
 
-        public virtual bool RegisterCollection(IEntityCollection<T> idCollection) => _children.Add(idCollection);
+        public virtual void RegisterCollection(TChild idCollection) => _children.Add(idCollection);
 
-        public virtual bool UnregisterCollection(IEntityCollection<T> idCollection) => _children.Remove(idCollection);
+        public virtual bool UnregisterCollection(TChild idCollection) => _children.Remove(idCollection);
 
         public virtual bool TryGet(int id, [MaybeNullWhen(false)] out T item) => _collections.TryGetValue(id, out item);
 

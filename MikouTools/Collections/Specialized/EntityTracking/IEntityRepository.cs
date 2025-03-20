@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.EntityTracking
 {
-    public interface IEntityRepository<T>
+    public interface IEntityRepository<T, TChild> where TChild : IEntityCollection<T>
     {
-        bool RegisterCollection(IEntityCollection<T> idCollection);
-        bool UnregisterCollection(IEntityCollection<T> idCollection);
+        void RegisterCollection(TChild idCollection);
+        bool UnregisterCollection(TChild idCollection);
 
         bool TryGet(int id, [MaybeNullWhen(false)] out T item);
 
