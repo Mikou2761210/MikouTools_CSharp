@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.EntityTracking
 {
-    public interface IEntityCollection<T>
+    public interface IEntityCollection<T> where T : IIdentifiable
     {
         IEnumerable<int> Ids { get; }
         bool Add(T item);
