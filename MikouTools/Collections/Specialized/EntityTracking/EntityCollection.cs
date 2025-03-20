@@ -31,11 +31,11 @@ namespace MikouTools.Collections.Specialized.EntityTracking
             Dispose(false);
         }
 
-        public virtual bool Add(T item)
+        public virtual bool Add(int id)
         {
-            if (_parent.Contains(item.ID))
+            if (_parent.Contains(id))
             {
-                _ids.Add(item.ID);
+                _ids.Add(id);
                 return true;
             }
             return false;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.EntityTracking
 {
-    public interface IEntityRepository<T, TChild> where TChild : IEntityCollection<T> where T : IIdentifiable
+    public interface IEntityRepository<T, TChild>  where T : IIdentifiable where TChild : IEntityCollection<T>
     {
         void RegisterCollection(TChild idCollection);
         bool UnregisterCollection(TChild idCollection);
