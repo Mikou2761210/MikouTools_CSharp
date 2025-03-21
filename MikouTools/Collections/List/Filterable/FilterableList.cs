@@ -267,6 +267,10 @@ namespace MikouTools.Collections.List.Filterable
                 return filteredItems.GetEnumerator();
         }
 
+        public virtual IEnumerator<T> BaseGetEnumerator() => base.GetEnumerator();
+
+        public virtual IEnumerator<T> FilterGetEnumerator() => filteredItems.GetEnumerator();
+
         /// <summary>
         /// Returns a non-generic enumerator that iterates through the list.
         /// </summary>
