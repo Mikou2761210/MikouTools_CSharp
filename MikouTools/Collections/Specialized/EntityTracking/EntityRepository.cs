@@ -45,7 +45,13 @@ namespace MikouTools.Collections.Specialized.EntityTracking
 
         public virtual bool TryGet(int id, [MaybeNullWhen(false)] out T item) => _collections.TryGetValue(id, out item);
 
-        public virtual T? TryGet(int id) => TryGet(id, out T? item) ? item : item;
+        public virtual T? TryGet(int? id) 
+        {
+            T? result = default;
+            if (id != null)
+                TryGet((int)id, out result);
+            return result;
+        }
 
         public virtual bool TryAdd(T item) => _collections.TryAdd(item.ID, item);
 
