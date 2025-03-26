@@ -10,21 +10,19 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.EntityTracking
 {
-    public class EntityCollection<T> : IEntityCollection<T> , IDisposable where T : IIdentifiable
+    public class EntityCollection<T, TChild> : IEntityCollection<T> , IDisposable where T : IIdentifiable where TChild : EntityCollection<T,TChild>
     {
-        protected readonly IEntityRepository<T, IEntityCollection<T>> _parent;
-        protected virtual ICollection<int> _ids { get; set; } 
-        public virtual IEnumerable<int> Ids => _ids;
+        protected readonly IEntityRepository<T, TChild> _parent;
+        protected virtual ICollection<int>? _ids { get; set; } 
+        public virtual IEnumerable<int> Ids => _ids!;
 
         protected virtual ICollection<int> CreateItems()
         {
             return new Collection<int>();
         }
-        public EntityCollection(IEntityRepository<T, IEntityCollection<T>> parent)
+        public EntityCollection(IEntityRepository<T, TChild> parent)
         {
             _parent = parent;
-            _ids = CreateItems();
-            _parent.RegisterCollection(this);
             Initialize();
         }
         ~EntityCollection()
@@ -33,11 +31,13 @@ namespace MikouTools.Collections.Specialized.EntityTracking
         }
         protected virtual void Initialize()
         {
-
+            _ids = CreateItems();
+            _parent.RegisterCollection((TChild)this);
         }
 
         public virtual bool Add(int id)
         {
+            if (_ids == null) throw new NullReferenceException(nameof(_ids));
             if (_parent.Contains(id))
             {
                 _ids.Add(id);
@@ -48,12 +48,17 @@ namespace MikouTools.Collections.Specialized.EntityTracking
 
         public virtual bool Remove(int id)
         {
+            if (_ids == null) throw new NullReferenceException(nameof(_ids));
             return _ids.Remove(id);
         }
 
         public virtual bool TryGet(int id, [MaybeNullWhen(false)] out T item) => _parent.TryGet(id, out item);
 
-        public virtual bool Contains(int id) => _ids.Contains(id);
+        public virtual bool Contains(int id)
+        {
+            if (_ids == null) throw new NullReferenceException(nameof(_ids));
+            return _ids.Contains(id);
+        }
 
 
 
@@ -72,7 +77,7 @@ namespace MikouTools.Collections.Specialized.EntityTracking
                 {
                     GC.SuppressFinalize(this);
                 }
-                _parent.UnregisterCollection(this);
+                _parent.UnregisterCollection((TChild)this);
                 _disposed = true;
             }
         }
