@@ -1,7 +1,7 @@
 ﻿using MikouTools.Collections.Interfaces;
 using System.Collections;
 
-namespace MikouTools.Collections.Queue.MultiLock
+namespace MikouTools.Collections.QueueEx.MultiLock
 {
     public class MultiLockQueue : System.Collections.Queue, IMultiLock
     {

@@ -1,4 +1,4 @@
-﻿using MikouTools.Collections.Queue.Signaling;
+﻿using MikouTools.Collections.QueueEx.Signaling;
 using MikouTools.Thread.Utils;
 using System.Diagnostics;
 using System.Net.Http.Headers;

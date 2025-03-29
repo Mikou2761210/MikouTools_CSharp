@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace MikouTools.Collections.Stack
+namespace MikouTools.Collections.StackEx
 {
     public class RunLengthStack<T>
     {

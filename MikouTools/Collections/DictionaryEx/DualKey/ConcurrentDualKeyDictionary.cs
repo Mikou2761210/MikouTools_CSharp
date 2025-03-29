@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MikouTools.Collections.Dictionary.DualKey
+namespace MikouTools.Collections.DictionaryEx.DualKey
 {
     public class ConcurrentDualKeyDictionary<TKey, TValue> : DualKeyDictionary<TKey, TValue> where TKey : notnull where TValue : notnull
     {

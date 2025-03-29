@@ -3,7 +3,7 @@ using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace MikouTools.Collections.List.DirtySort
+namespace MikouTools.Collections.ListEx.DirtySort
 {
     public interface IDirtySortList<T> : IList<T>, IDirtySort<T>;
 

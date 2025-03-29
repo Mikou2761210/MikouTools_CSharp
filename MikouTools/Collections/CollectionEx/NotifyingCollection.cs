@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
-namespace MikouTools.Collections.Collection
+namespace MikouTools.Collections.CollectionEx
 {
     public class NotifyingCollection<T> : Collection<T>, IExtendNotifyCollectionChanged
     {

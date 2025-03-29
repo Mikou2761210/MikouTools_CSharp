@@ -1,7 +1,7 @@
-﻿using MikouTools.Collections.List.Overrideable;
+﻿using MikouTools.Collections.ListEx.Overrideable;
 using System.Collections;
 
-namespace MikouTools.Collections.List.Filterable
+namespace MikouTools.Collections.ListEx.Filterable
 {
     /// <summary>
     /// A base list class that provides full (unfiltered) access to the underlying items.
@@ -35,10 +35,10 @@ namespace MikouTools.Collections.List.Filterable
         #region Fields
 
         // Predicate function to determine if an item should be included in the filtered list.
-        private Func<T, bool>? filterPredicate;
+        protected virtual Func<T, bool>? filterPredicate { get; set; }
 
         // Internal list holding only the items that satisfy the filter predicate.
-        private readonly List<T> filteredItems = new List<T>();
+        protected virtual OverrideableList<T> filteredItems { get; set; } = [];
 
         // Exposes the filtered items as a read-only list.
         public virtual IReadOnlyList<T> FilteredList => filteredItems;

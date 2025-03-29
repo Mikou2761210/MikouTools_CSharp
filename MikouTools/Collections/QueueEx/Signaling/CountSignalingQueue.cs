@@ -1,7 +1,7 @@
-﻿using MikouTools.Collections.Queue.MultiLock;
+﻿using MikouTools.Collections.QueueEx.MultiLock;
 using MikouTools.Thread.Utils;
 
-namespace MikouTools.Collections.Queue.Signaling
+namespace MikouTools.Collections.QueueEx.Signaling
 {
     /// <summary>
     /// Represents the waiting state of the signaling queue.

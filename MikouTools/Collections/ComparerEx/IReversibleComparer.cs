@@ -1,4 +1,4 @@
-﻿namespace MikouTools.Collections.Comparer
+﻿namespace MikouTools.Collections.ComparerEx
 {
     public interface IReversibleComparer<T> : IComparer<T>
     {

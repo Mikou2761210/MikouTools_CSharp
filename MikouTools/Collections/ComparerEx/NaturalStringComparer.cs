@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace MikouTools.Collections.Comparer
+namespace MikouTools.Collections.ComparerEx
 {
     public class NaturalStringComparer(bool isAscending = true) : IComparer<string>
     {

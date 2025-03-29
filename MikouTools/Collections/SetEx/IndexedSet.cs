@@ -1,7 +1,7 @@
-﻿using MikouTools.Collections.Dictionary.DualKey;
+﻿using MikouTools.Collections.DictionaryEx.DualKey;
 using System.Collections.Generic;
 
-namespace MikouTools.Collections.Set
+namespace MikouTools.Collections.SetEx
 {
     public class IndexedSet<TValue> where TValue : notnull
     {

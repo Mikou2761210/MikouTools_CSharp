@@ -1,7 +1,7 @@
-﻿using MikouTools.Collections.Dictionary.Extend;
+﻿using MikouTools.Collections.DictionaryEx.Extend;
 using System.Diagnostics.CodeAnalysis;
 
-namespace MikouTools.Collections.Dictionary.DualKey
+namespace MikouTools.Collections.DictionaryEx.DualKey
 {
     /// <summary>
     /// A dictionary that provides fast bidirectional lookup while ensuring both keys and values are unique.

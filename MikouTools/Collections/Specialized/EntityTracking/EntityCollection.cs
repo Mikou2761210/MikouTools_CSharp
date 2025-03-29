@@ -1,5 +1,5 @@
-﻿using MikouTools.Collections.Dictionary.DualKey;
-using MikouTools.Collections.Dictionary.Extend;
+﻿using MikouTools.Collections.DictionaryEx.DualKey;
+using MikouTools.Collections.DictionaryEx.Extend;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

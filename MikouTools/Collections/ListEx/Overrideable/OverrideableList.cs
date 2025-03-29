@@ -1,4 +1,4 @@
-﻿namespace MikouTools.Collections.List.Overrideable
+﻿namespace MikouTools.Collections.ListEx.Overrideable
 {
     public class OverrideableList<T> : List<T>
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MikouTools.Collections.List.DirtySort
+namespace MikouTools.Collections.ListEx.DirtySort
 {
     public class ConcurrentDirtySortList<T> : DirtySortList<T>
     {

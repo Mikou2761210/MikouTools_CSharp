@@ -1,8 +1,8 @@
-﻿using MikouTools.Collections.List.Overrideable;
+﻿using MikouTools.Collections.ListEx.Overrideable;
 using MikouTools.Collections.WPF;
 using System.Collections.Specialized;
 
-namespace MikouTools.Collections.List.Notifying
+namespace MikouTools.Collections.ListEx.Notifying
 {
     public class NotifyingList<T> : OverrideableList<T>, IExtendNotifyCollectionChanged
     {

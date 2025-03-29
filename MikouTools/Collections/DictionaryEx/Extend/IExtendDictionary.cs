@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MikouTools.Collections.Dictionary.Extend
+namespace MikouTools.Collections.DictionaryEx.Extend
 {
     public interface IExtendDictionary<TKey, TValue> : IDictionary<TKey, TValue> where TKey : notnull where TValue : notnull
     {

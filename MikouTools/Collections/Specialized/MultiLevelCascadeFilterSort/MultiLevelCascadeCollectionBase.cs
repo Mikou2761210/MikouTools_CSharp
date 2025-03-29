@@ -1,4 +1,4 @@
-﻿using MikouTools.Collections.Dictionary.DualKey;
+﻿using MikouTools.Collections.DictionaryEx.DualKey;
 
 namespace MikouTools.Collections.Specialized.MultiLevelCascadeFilterSort
 {
