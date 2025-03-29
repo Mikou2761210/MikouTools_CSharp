@@ -41,10 +41,10 @@ namespace MikouTools.Collections.List.Filterable
         private readonly List<T> filteredItems = new List<T>();
 
         // Exposes the filtered items as a read-only list.
-        public IReadOnlyList<T> FilteredList => filteredItems;
+        public virtual IReadOnlyList<T> FilteredList => filteredItems;
 
         // Exposes the full (unfiltered) items from the base class.
-        public IReadOnlyList<T> FullList => base.GetFullItems;
+        public virtual IReadOnlyList<T> FullList => base.GetFullItems;
 
         #endregion
 
@@ -54,7 +54,7 @@ namespace MikouTools.Collections.List.Filterable
         /// Gets or sets the filter predicate.
         /// When the predicate is set, the filtered items list is rebuilt to reflect the new filter.
         /// </summary>
-        public Func<T, bool>? FilterPredicate
+        public virtual Func<T, bool>? FilterPredicate
         {
             get => filterPredicate;
             set
@@ -69,13 +69,13 @@ namespace MikouTools.Collections.List.Filterable
         /// This property returns the modifiable internal list, which might be used internally.
         /// For external consumption, consider using <see cref="FilteredList"/>.
         /// </summary>
-        public List<T> FilteredItems => filteredItems;
+        public virtual List<T> FilteredItems => filteredItems;
 
         /// <summary>
         /// Determines whether operations such as Add, Remove, and indexing affect the full list (if true)
         /// or only the filtered list (if false).
         /// </summary>
-        public bool IsFullMode { get; set; } = true;
+        public virtual bool IsFullMode { get; set; } = true;
 
         #endregion
 
@@ -102,7 +102,7 @@ namespace MikouTools.Collections.List.Filterable
         /// Rebuilds the filteredItems list by iterating over the full list and selecting items
         /// that satisfy the filter predicate.
         /// </summary>
-        public void RebuildFilteredItems()
+        public virtual void RebuildFilteredItems()
         {
             filteredItems.Clear();
             if (filterPredicate != null)
@@ -123,7 +123,7 @@ namespace MikouTools.Collections.List.Filterable
         /// <param name="fromIndex">The source index.</param>
         /// <param name="toIndex">The destination index.</param>
         /// <returns>The new index of the moved item, or -1 if no move occurred.</returns>
-        public int Move(int fromIndex, int toIndex)
+        public virtual int Move(int fromIndex, int toIndex)
         {
             // Select the list based on current mode: full list if IsFullMode is true, otherwise the filtered list.
             var list = IsFullMode ? (IList<T>)this : filteredItems;
