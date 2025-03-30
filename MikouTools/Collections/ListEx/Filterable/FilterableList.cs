@@ -35,13 +35,13 @@ namespace MikouTools.Collections.ListEx.Filterable
         #region Fields
 
         // Predicate function to determine if an item should be included in the filtered list.
-        protected virtual Func<T, bool>? filterPredicate { get; set; }
+        protected virtual Func<T, bool>? _filterPredicate { get; set; }
 
         // Internal list holding only the items that satisfy the filter predicate.
-        protected virtual OverrideableList<T> filteredItems { get; set; } = [];
+        protected virtual OverrideableList<T> _filteredItems { get; set; } = [];
 
         // Exposes the filtered items as a read-only list.
-        public virtual IReadOnlyList<T> FilteredList => filteredItems;
+        public virtual IReadOnlyList<T> FilteredList => _filteredItems;
 
         // Exposes the full (unfiltered) items from the base class.
         public virtual IReadOnlyList<T> FullList => base.GetFullItems;
@@ -56,10 +56,10 @@ namespace MikouTools.Collections.ListEx.Filterable
         /// </summary>
         public virtual Func<T, bool>? FilterPredicate
         {
-            get => filterPredicate;
+            get => _filterPredicate;
             set
             {
-                filterPredicate = value;
+                _filterPredicate = value;
                 RebuildFilteredItems();
             }
         }
@@ -69,7 +69,7 @@ namespace MikouTools.Collections.ListEx.Filterable
         /// This property returns the modifiable internal list, which might be used internally.
         /// For external consumption, consider using <see cref="FilteredList"/>.
         /// </summary>
-        public virtual List<T> FilteredItems => filteredItems;
+        public virtual List<T> FilteredItems => _filteredItems;
 
         /// <summary>
         /// Determines whether operations such as Add, Remove, and indexing affect the full list (if true)
@@ -104,15 +104,15 @@ namespace MikouTools.Collections.ListEx.Filterable
         /// </summary>
         public virtual void RebuildFilteredItems()
         {
-            filteredItems.Clear();
-            if (filterPredicate != null)
+            _filteredItems.Clear();
+            if (_filterPredicate != null)
             {
                 // Use the base indexer to ensure the entire underlying list is considered.
                 for (int i = 0; i < base.Count; i++)
                 {
                     T item = base[i];
-                    if (filterPredicate(item))
-                        filteredItems.Add(item);
+                    if (_filterPredicate(item))
+                        _filteredItems.Add(item);
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace MikouTools.Collections.ListEx.Filterable
         public virtual int Move(int fromIndex, int toIndex)
         {
             // Select the list based on current mode: full list if IsFullMode is true, otherwise the filtered list.
-            var list = IsFullMode ? (IList<T>)this : filteredItems;
+            var list = IsFullMode ? (IList<T>)this : _filteredItems;
 
             if (fromIndex < 0 || fromIndex >= list.Count)
                 throw new ArgumentOutOfRangeException(nameof(fromIndex), "Source index is out of range.");
@@ -158,8 +158,8 @@ namespace MikouTools.Collections.ListEx.Filterable
         public override void Add(T item)
         {
             base.Add(item);
-            if (filterPredicate != null && filterPredicate(item))
-                filteredItems.Add(item);
+            if (_filterPredicate != null && _filterPredicate(item))
+                _filteredItems.Add(item);
         }
 
         /// <summary>
@@ -171,8 +171,8 @@ namespace MikouTools.Collections.ListEx.Filterable
         public override void Insert(int index, T item)
         {
             base.Insert(index, item);
-            if (filterPredicate != null && filterPredicate(item))
-                filteredItems.Add(item);
+            if (_filterPredicate != null && _filterPredicate(item))
+                _filteredItems.Add(item);
         }
 
         /// <summary>
@@ -184,8 +184,8 @@ namespace MikouTools.Collections.ListEx.Filterable
         public override bool Remove(T item)
         {
             bool removed = base.Remove(item);
-            if (removed && filterPredicate != null && filterPredicate(item))
-                filteredItems.Remove(item);
+            if (removed && _filterPredicate != null && _filterPredicate(item))
+                _filteredItems.Remove(item);
             return removed;
         }
 
@@ -201,13 +201,13 @@ namespace MikouTools.Collections.ListEx.Filterable
             {
                 T item = base[index];
                 base.RemoveAt(index);
-                if (filterPredicate != null && filterPredicate(item))
-                    filteredItems.Remove(item);
+                if (_filterPredicate != null && _filterPredicate(item))
+                    _filteredItems.Remove(item);
             }
             else
             {
-                T item = filteredItems[index];
-                filteredItems.RemoveAt(index);
+                T item = _filteredItems[index];
+                _filteredItems.RemoveAt(index);
                 // Remove the corresponding item from the full list.
                 int fullIndex = base.IndexOf(item);
                 if (fullIndex >= 0)
@@ -221,7 +221,7 @@ namespace MikouTools.Collections.ListEx.Filterable
         public override void Clear()
         {
             base.Clear();
-            filteredItems.Clear();
+            _filteredItems.Clear();
         }
 
         /// <summary>
@@ -231,36 +231,36 @@ namespace MikouTools.Collections.ListEx.Filterable
         /// <returns>The element at the specified index.</returns>
         public override T this[int index]
         {
-            get => IsFullMode ? base[index] : filteredItems[index];
+            get => IsFullMode ? base[index] : _filteredItems[index];
             set
             {
                 if (IsFullMode)
                 {
                     T oldItem = base[index];
-                    bool wasFiltered = filterPredicate != null && filterPredicate(oldItem);
+                    bool wasFiltered = _filterPredicate != null && _filterPredicate(oldItem);
                     base[index] = value;
-                    bool isFiltered = filterPredicate != null && filterPredicate(value);
+                    bool isFiltered = _filterPredicate != null && _filterPredicate(value);
 
                     if (wasFiltered)
                     {
-                        int filteredIndex = filteredItems.IndexOf(oldItem);
+                        int filteredIndex = _filteredItems.IndexOf(oldItem);
                         if (filteredIndex >= 0)
                         {
                             if (isFiltered)
-                                filteredItems[filteredIndex] = value;
+                                _filteredItems[filteredIndex] = value;
                             else
-                                filteredItems.RemoveAt(filteredIndex);
+                                _filteredItems.RemoveAt(filteredIndex);
                         }
                     }
                     else if (isFiltered)
                     {
-                        filteredItems.Add(value);
+                        _filteredItems.Add(value);
                     }
                 }
                 else
                 {
-                    T oldItem = filteredItems[index];
-                    filteredItems[index] = value;
+                    T oldItem = _filteredItems[index];
+                    _filteredItems[index] = value;
                     int fullIndex = base.IndexOf(oldItem);
                     if (fullIndex >= 0)
                         base[fullIndex] = value;
@@ -272,7 +272,7 @@ namespace MikouTools.Collections.ListEx.Filterable
         /// Gets the number of elements contained in the list, depending on the current mode.
         /// Returns the count of the full list when in full mode, or the filtered list count otherwise.
         /// </summary>
-        public override int Count => IsFullMode ? base.Count : filteredItems.Count;
+        public override int Count => IsFullMode ? base.Count : _filteredItems.Count;
 
         /// <summary>
         /// Sorts a range of elements in the list.
@@ -291,7 +291,7 @@ namespace MikouTools.Collections.ListEx.Filterable
             }
             else
             {
-                filteredItems.Sort(index, count, comparer);
+                _filteredItems.Sort(index, count, comparer);
             }
         }
 
@@ -305,7 +305,7 @@ namespace MikouTools.Collections.ListEx.Filterable
             if (IsFullMode)
                 return base.GetEnumerator();
             else
-                return filteredItems.GetEnumerator();
+                return _filteredItems.GetEnumerator();
         }
 
         /// <summary>
@@ -316,7 +316,7 @@ namespace MikouTools.Collections.ListEx.Filterable
         /// <summary>
         /// Returns an enumerator for the filtered list.
         /// </summary>
-        public virtual IEnumerator<T> FilterGetEnumerator() => filteredItems.GetEnumerator();
+        public virtual IEnumerator<T> FilterGetEnumerator() => _filteredItems.GetEnumerator();
 
         /// <summary>
         /// Returns a non-generic enumerator that iterates through the list.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -132,7 +133,7 @@ namespace MikouTools.Collections.DictionaryEx.DualKey
         /// <param name="value">The value whose associated key is to be retrieved.</param>
         /// <param name="key">When this method returns, contains the key associated with the specified value, if found; otherwise, the default value.</param>
         /// <returns>true if the key was found; otherwise, false.</returns>
-        public override bool TryGetKey(TValue value, out TKey? key)
+        public override bool TryGetKey(TValue value, [MaybeNullWhen(false)] out TKey key)
         {
             lock (_lock)
             {
