@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.EntityTracking
 {
+    public interface IEntityRepositoryInitArgs { }
     public class EntityRepository<T, TChild> : IEntityRepository<T, TChild> where T : IIdentifiable where TChild : IEntityCollection<T>
 
     {
@@ -28,15 +29,17 @@ namespace MikouTools.Collections.Specialized.EntityTracking
         }
 
 
-        public EntityRepository()
+        public EntityRepository(IEntityRepositoryInitArgs? args = null)
+        {
+            Initialize(args);
+
+            if (_collections is null) throw new NullReferenceException(nameof(_collections));
+            if (_children is null) throw new NullReferenceException(nameof(_children));
+        }
+        protected virtual void Initialize(IEntityRepositoryInitArgs? args)
         {
             _collections = CreateCollection();
             _children = CreateChildren();
-            Initialize();
-        }
-        protected virtual void Initialize()
-        {
-
         }
 
         public virtual void RegisterCollection(TChild idCollection) => _children.Add(idCollection);

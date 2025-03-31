@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.ListEx.Filterable
 {
-    public class AdvancedFilterableList<T> : IEnumerable<T> 
+    public class AdvancedFilterableList<T> : IList<T>, IReadOnlyList<T>
     {
         #region Fields
 
@@ -186,6 +186,8 @@ namespace MikouTools.Collections.ListEx.Filterable
         }
 
         public virtual int Count => IsFullMode ? _fullItems.Count : _filteredItems.Count;
+
+        public bool IsReadOnly => false;
 
         public virtual void Sort()
         {
