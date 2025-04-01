@@ -63,7 +63,7 @@ namespace MikouTools.Thread.Specialized
             });
             ThreadName = _ThreadName;
             thread.IsBackground = IsBackground;
-            if (ApartmentState != null)
+            if (ApartmentState != null && OperatingSystem.IsWindows())
                 thread.SetApartmentState((ApartmentState)ApartmentState);
         }
 
