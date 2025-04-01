@@ -5,23 +5,24 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.EntityTracking
 {
     public interface IEntityCollectionInitArgs { }
-    public class EntityCollection<T, TChild> : IEntityCollection<T> , IDisposable where T : IIdentifiable where TChild : EntityCollection<T,TChild>
+    public class EntityCollection<TId, T, TChild> : IEntityCollection<TId, T> , IDisposable where T : IIdentifiable<TId> where TChild : EntityCollection<TId, T, TChild> where TId : notnull
     {
-        protected virtual IEntityRepository<T, TChild> _parent { get; set; }
-        protected virtual ICollection<int> _ids { get; set; } 
-        public virtual IEnumerable<int> Ids => _ids;
+        protected virtual IEntityRepository<TId ,T, TChild> _parent { get; set; }
+        protected virtual ICollection<TId> _ids { get; set; } 
+        public virtual IEnumerable<TId> Ids => _ids;
 
-        protected virtual ICollection<int> CreateItems()
+        protected virtual ICollection<TId> CreateItems()
         {
-            return new Collection<int>();
+            return new Collection<TId>();
         }
-        public EntityCollection(IEntityRepository<T, TChild> parent, IEntityCollectionInitArgs? args = null)
+        public EntityCollection(IEntityRepository<TId, T, TChild> parent, IEntityCollectionInitArgs? args = null)
         {
             Initialize(parent, args);
 
@@ -32,14 +33,14 @@ namespace MikouTools.Collections.Specialized.EntityTracking
         {
             Dispose(false);
         }
-        protected virtual void Initialize(IEntityRepository<T, TChild> parent, IEntityCollectionInitArgs? args)
+        protected virtual void Initialize(IEntityRepository<TId, T, TChild> parent, IEntityCollectionInitArgs? args)
         {
             _parent = parent;
             _ids = CreateItems();
             _parent.RegisterCollection((TChild)this);
         }
 
-        public virtual bool Add(int id)
+        public virtual bool Add(TId id)
         {
             if (_parent.Contains(id))
             {
@@ -49,14 +50,14 @@ namespace MikouTools.Collections.Specialized.EntityTracking
             return false;
         }
 
-        public virtual bool Remove(int id)
+        public virtual bool Remove(TId id)
         {
             return _ids.Remove(id);
         }
 
-        public virtual bool TryGet(int id, [MaybeNullWhen(false)] out T item) => _parent.TryGet(id, out item);
+        public virtual bool TryGet(TId id, [MaybeNullWhen(false)] out T item) => _parent.TryGet(id, out item);
 
-        public virtual bool Contains(int id)
+        public virtual bool Contains(TId id)
         {
             return _ids.Contains(id);
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.EntityTracking
 {
-    public interface IEntityReadOnlyList<T> : IEntityCollection<T> ,IReadOnlyList<int> where T : IIdentifiable
+    public interface IEntityReadOnlyList<TId, T> : IEntityCollection<TId, T> ,IReadOnlyList<TId> where T : IIdentifiable<TId> where TId : notnull
     {
 
     }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.EntityTracking
 {
-    public interface IIdentifiable
+    public interface IIdentifiable<TId> where TId : notnull
     {
-        int ID { get; init; }
+        TId ID { get; }
     }
 }

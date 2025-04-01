@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.EntityTracking
 {
-    public interface IEntityCollection<T> where T : IIdentifiable
+    public interface IEntityCollection<TId, T> where T : IIdentifiable<TId> where TId : notnull
     {
-        IEnumerable<int> Ids { get; }
-        bool Add(int id);
-        bool Remove(int id);
-        bool TryGet(int id, [MaybeNullWhen(false)] out T item);
+        IEnumerable<TId> Ids { get; }
+        bool Add(TId id);
+        bool Remove(TId id);
+        bool TryGet(TId id, [MaybeNullWhen(false)] out T item);
     }
 }

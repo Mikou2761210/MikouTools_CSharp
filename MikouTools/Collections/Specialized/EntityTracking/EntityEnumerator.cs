@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace MikouTools.Collections.Specialized.EntityTracking
 {
-    public struct EntityEnumerator<T> : IEnumerator<T>, System.Collections.IEnumerator where T : IIdentifiable
+    public struct EntityEnumerator<TId, T> : IEnumerator<T>, System.Collections.IEnumerator where T : IIdentifiable<TId> where TId : notnull
     {
-        private readonly IEntityReadOnlyList<T> _entityReadOnlyList;
+        private readonly IEntityReadOnlyList<TId, T> _entityReadOnlyList;
 
         private int _index;
         private T? _current;
 
-        internal EntityEnumerator(IEntityReadOnlyList<T> entityCollection)
+        internal EntityEnumerator(IEntityReadOnlyList<TId, T> entityCollection)
         {
             _entityReadOnlyList = entityCollection;
             _index = 0;
@@ -47,7 +47,7 @@ namespace MikouTools.Collections.Specialized.EntityTracking
         {
             get
             {
-                if (_index == 0 || _index == _entityReadOnlyList.Count + 1)
+                if (_index == 0 || _index > _entityReadOnlyList.Count)
                     throw new InvalidOperationException();
                 return Current;
             }
