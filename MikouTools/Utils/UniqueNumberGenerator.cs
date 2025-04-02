@@ -7,7 +7,7 @@
         // The next unique ID to assign when no reusable IDs are available.
         private int _latestId = -1;
 
-        public IReadOnlyCollection<int> AvailadlbIds => _availableIds;
+        public IReadOnlyCollection<int> AvailableIds => _availableIds;
 
         public UniqueNumberGenerator(IEnumerable<int>? initialUsedIDs = null)
         {
